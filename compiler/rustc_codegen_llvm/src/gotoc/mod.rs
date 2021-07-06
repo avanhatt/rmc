@@ -311,7 +311,10 @@ impl CodegenBackend for GotocCodegenBackend {
             let items = cgu.items_in_deterministic_order(tcx);
             for (item, _) in items {
                 match item {
-                    MonoItem::Fn(instance) => c.codegen_function(instance),
+                    MonoItem::Fn(instance) => {
+                        println!("Codegen: {}", c.readable_instance_name(instance));
+                        c.codegen_function(instance)
+                    }
                     MonoItem::Static(def_id) => c.codegen_static(def_id, item),
                     MonoItem::GlobalAsm(_) => {} // We have already warned above
                 }
