@@ -827,6 +827,12 @@ fn create_mono_items_for_vtable_methods<'tcx>(
                 .filter(|&instance| should_codegen_locally(tcx, &instance))
                 .map(|item| create_fn_mono_item(item, source));
             output.extend(methods);
+        } else {
+            println!(
+                "WOULD FAIL: missing principal: {}, {}",
+                format!("{:?}", trait_ty).replace("\n", ""),
+                format!("{:?}", impl_ty).replace("\n", "")
+            );
         }
 
         // Also add the destructor.

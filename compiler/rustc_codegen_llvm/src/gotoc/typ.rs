@@ -205,6 +205,12 @@ impl<'tcx> GotocCtx<'tcx> {
                     .collect();
 
                 vtable_base.append(&mut flds);
+            } else {
+                println!(
+                    "WOULD FAIL: missing principal: {}, {}",
+                    self.current_fn().readable_name(),
+                    format!("{:?}", t).replace("\n", "")
+                );
             }
             vtable_base
         } else {

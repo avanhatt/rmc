@@ -653,6 +653,21 @@ impl Type {
     }
 
     pub fn components_are_unique(components: &[DatatypeComponent]) -> bool {
+        let mut partial_names: Vec<String> = components
+            .iter()
+            .map(|c| {
+                (c.clone()).name().split("::").collect::<Vec<&str>>().last().unwrap().to_string()
+            })
+            .collect();
+        partial_names.sort();
+        partial_names.dedup();
+        if partial_names.len() != components.len() {
+            println!(
+                "WOULD FAIL: duplicate names: {}",
+                format!("{:?}", components).replace("\n", "")
+            );
+        }
+
         let mut names: Vec<_> = components.iter().map(|x| x.name()).collect();
         names.sort();
         names.dedup();

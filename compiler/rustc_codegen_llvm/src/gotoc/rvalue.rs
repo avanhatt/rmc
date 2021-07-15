@@ -890,6 +890,12 @@ impl<'tcx> GotocCtx<'tcx> {
                     let concrete_type = principal.with_self_ty(ctx.tcx, src_mir_type);
                     let mut methods = ctx.codegen_vtable_methods(concrete_type, trait_type);
                     vtable_fields.append(&mut methods);
+                } else {
+                    println!(
+                        "WOULD FAIL: missing principal: {}, {}",
+                        ctx.current_fn().readable_name(),
+                        vtable_impl_name
+                    );
                 }
                 let vtable = Expr::struct_expr_from_values(
                     Type::struct_tag(&vtable_name),
@@ -924,6 +930,13 @@ impl<'tcx> GotocCtx<'tcx> {
         if src_mir_type.kind() == dst_mir_type.kind() {
             return None; // no cast required, nothing to do
         }
+
+        println!(
+            "WOULD FAIL: dynamic source cast: {}, {}, {}",
+            self.current_fn().readable_name(),
+            format!("{:?}", src_goto_expr).replace("\n", ""),
+            format!("{:?}", dst_mir_type).replace("\n", ""),
+        );
 
         // The source destination must be a fat pointers to a dyn trait object
         assert!(self.is_vtable_fat_pointer(src_mir_type));

@@ -216,6 +216,11 @@ impl<'tcx> GotocCtx<'tcx> {
             // A local that is a pointer to a FnDef, like Fn::call and Fn::call_mut
             ty::RawPtr(inner) => match inner.ty.kind() {
                 ty::FnDef(defid, substs) => {
+                    println!(
+                        "WOULD FAIL: local function call: {}, {:?}",
+                        self.current_fn().readable_name(),
+                        format!("{:?}", defid).replace("\n", "")
+                    );
                     Some(self.codegen_fndef(*defid, substs, None).address_of())
                 }
                 _ => None,

@@ -35,7 +35,14 @@ impl<'tcx> GotocCtx<'tcx> {
                 // Consider moving this check elsewhere in:
                 // https://github.com/model-checking/rmc/issues/277
                 match self.operand_ty(o).kind() {
-                    ty::Dynamic(..) => projection.fat_ptr_goto_expr.unwrap(),
+                    ty::Dynamic(..) => {
+                        println!(
+                            "WOULD FAIL: dynamic operand: {}, {:?}",
+                            self.current_fn().readable_name(),
+                            format!("{:?}", projection.fat_ptr_goto_expr).replace("\n", "")
+                        );
+                        projection.fat_ptr_goto_expr.unwrap()
+                    }
                     _ => projection.goto_expr,
                 }
             }

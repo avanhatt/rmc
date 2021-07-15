@@ -161,6 +161,7 @@ impl<'tcx> GotocCtx<'tcx> {
     }
 
     fn should_skip_current_fn(&self) -> bool {
+        println!("Skipping current function: {}", self.current_fn().readable_name());
         match self.current_fn().readable_name() {
             // https://github.com/model-checking/rmc/issues/202
             "fmt::ArgumentV1::<'a>::as_usize" => true,
@@ -388,12 +389,14 @@ impl CodegenBackend for GotocCodegenBackend {
             for (item, _) in items {
                 match item {
                     MonoItem::Fn(instance) => {
+                        println!("Codegen: {}", c.readable_instance_name(instance));
                         c.call_with_panic_debug_info(
                             |ctx| ctx.codegen_function(instance),
                             format!("codegen_function: {}", c.readable_instance_name(instance)),
                         );
                     }
                     MonoItem::Static(def_id) => {
+                        println!("Codegen: {:?}", def_id);
                         c.call_with_panic_debug_info(
                             |ctx| ctx.codegen_static(def_id, item),
                             format!("codegen_static: {:?}", def_id),
