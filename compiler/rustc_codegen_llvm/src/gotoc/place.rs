@@ -10,8 +10,9 @@ use super::metadata::*;
 use super::typ::tuple_fld;
 use rustc_middle::{
     mir::{Field, Local, Place, ProjectionElem},
-    ty::{self, Ty, TyS, VariantDef},
+    ty::{self, Ty, TyCtxt, TyS, TypeAndMut, VariantDef},
 };
+use rustc_target::abi::*;
 use rustc_target::abi::{LayoutOf, TagEncoding, Variants};
 use tracing::{debug, warn};
 
@@ -65,7 +66,7 @@ impl<'tcx> ProjectedPlace<'tcx> {
 impl<'tcx> ProjectedPlace<'tcx> {
     fn check_expr_typ(expr: &Expr, typ: &TypeOrVariant<'tcx>, ctx: &mut GotocCtx<'tcx>) -> bool {
         match typ {
-            TypeOrVariant::Type(t) => &ctx.codegen_ty(t) == expr.typ(),
+            TypeOrVariant::Type(t) => dbg!(&ctx.codegen_ty(t)) == expr.typ(),
             TypeOrVariant::Variant(_) => true, //TODO, what to do here?
         }
     }
@@ -103,12 +104,12 @@ impl<'tcx> ProjectedPlace<'tcx> {
         // TODO: these assertions fail on a few regressions. Figure out why.
         // I think it may have to do with boxed fat pointers.
         // https://github.com/model-checking/rmc/issues/277
-        if !Self::check_expr_typ(&goto_expr, &mir_typ_or_variant, ctx) {
-            warn!(
-                "Unexpected type mismatch in projection: \n{:?}\n{:?}",
-                &goto_expr, &mir_typ_or_variant
-            );
-        };
+        assert!(
+            Self::check_expr_typ(&goto_expr, &mir_typ_or_variant, ctx),
+            "Unexpected type mismatch in projection: \n{:?}\n{:?}",
+            &goto_expr,
+            &mir_typ_or_variant
+        );
 
         assert!(
             Self::check_fat_ptr_typ(&fat_ptr_goto_expr, &fat_ptr_mir_typ, ctx),
@@ -246,8 +247,37 @@ impl<'tcx> GotocCtx<'tcx> {
         before: ProjectedPlace<'tcx>,
         proj: ProjectionElem<Local, &'tcx TyS<'_>>,
     ) -> ProjectedPlace<'tcx> {
+        dbg!(proj);
         match proj {
             ProjectionElem::Deref => {
+                /// Is a pointer to this type a fat ptr?
+                pub fn has_ptr_meta<'tcx>(tcx: TyCtxt<'tcx>, ty: Ty<'tcx>) -> bool {
+                    let ptr_ty = tcx.mk_ptr(TypeAndMut { ty, mutbl: rustc_hir::Mutability::Not });
+                    match &tcx.layout_of(ty::ParamEnv::reveal_all().and(ptr_ty)).unwrap().abi {
+                        Abi::Scalar(_) => false,
+                        Abi::ScalarPair(_, _) => true,
+                        abi => unreachable!("Abi of ptr to {:?} is {:?}???", ty, abi),
+                    }
+                }
+
+                let deref_ty = self.layout_of(before.mir_typ()).ty.builtin_deref(true).unwrap().ty;
+                let inner_layout = self.layout_of(deref_ty);
+                let inner_mir_typ = inner_layout.ty;
+
+                if has_ptr_meta(self.tcx, inner_mir_typ) {
+                    dbg!("has_ptr_meta");
+                } else {
+                    dbg!("!has_ptr_meta");
+                }
+
+                // let inner_layout = fx.layout_of(self.layout().ty.builtin_deref(true).unwrap().ty);
+
+                // if has_ptr_meta(fx.tcx, inner_layout.ty) {
+                //     let (addr, extra) = self.to_cvalue(fx).load_scalar_pair(fx);
+                //     CPlace::for_ptr_with_extra(Pointer::new(addr), extra, inner_layout)
+                // } else {
+                //     CPlace::for_ptr(Pointer::new(self.to_cvalue(fx).load_scalar(fx)), inner_layout)
+                // }
                 let base_type = before.mir_typ();
                 let inner_goto_expr = if base_type.is_box() {
                     self.deref_box(before.goto_expr)
@@ -283,11 +313,12 @@ impl<'tcx> GotocCtx<'tcx> {
                     );
                 };
 
-                let inner_mir_typ = inner_mir_typ_and_mut.ty;
+                // let inner_mir_typ = inner_mir_typ_and_mut.ty;
                 let expr = match inner_mir_typ.kind() {
-                    ty::Slice(_) | ty::Str | ty::Dynamic(..) => {
-                        inner_goto_expr.member("data", &self.symbol_table)
-                    }
+                    ty::Slice(_) | ty::Str | ty::Dynamic(..) => inner_goto_expr
+                        .member("data", &self.symbol_table)
+                        .cast_to(self.codegen_ty(inner_mir_typ).to_pointer())
+                        .dereference(),
                     ty::Adt(..) if self.is_unsized(inner_mir_typ) => {
                         // in cbmc-reg/Strings/os_str_reduced.rs, we see
                         // ```

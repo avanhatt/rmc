@@ -633,6 +633,7 @@ impl<'tcx> GotocCtx<'tcx> {
             PointerCast::UnsafeFnPointer => self.codegen_operand(o),
             PointerCast::ClosureFnPointer(_) => {
                 let dest_typ = self.codegen_ty(t);
+                // TODO check for this
                 self.codegen_unimplemented(
                     "PointerCast::ClosureFnPointer",
                     dest_typ,
