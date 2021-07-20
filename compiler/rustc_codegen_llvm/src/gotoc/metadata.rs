@@ -378,7 +378,7 @@ impl<'tcx> GotocCtx<'tcx> {
         loc: Location,
         url: &str,
     ) -> Expr {
-        println!("Unimplemented: {}", operation_name);
+        println!("Unimplemented: {}, {:?}", operation_name, loc);
         let body = vec![
             // Assert false to alert the user that there is a path that uses an unimplemented feature.
             Stmt::assert_false(

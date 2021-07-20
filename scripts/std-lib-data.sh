@@ -5,9 +5,18 @@ sort std-lib-log.txt | uniq > std-lib-log-unique.txt
 
 for FILE in  std-lib-log.txt std-lib-log-unique.txt
 do
+    if grep -q "error: internal compiler error: unexpected panic"  $FILE; then
+        echo "Panic on building standard library"
+        cat $FILE
+        exit 1
+    fi 
+    
     echo $FILE
 	echo "Total invocations"
     grep 'Codegen: ' $FILE | wc -l
+
+	echo "Total unimplemented"
+    grep 'Unimplemented: ' $FILE | wc -l
 
     echo "inline assembly"
     grep 'Unimplemented: InlineAsm' $FILE | wc -l
@@ -16,7 +25,7 @@ do
     grep 'Unimplemented: try' $FILE | wc -l
 
     echo "Skipped functions"
-    grep 'Skipping current function:' $FILE| wc -l
+    grep 'Skipping current function:' $FILE | wc -l
 
     echo "Local calls"
     grep 'WOULD FAIL: local function call' $FILE | wc -l

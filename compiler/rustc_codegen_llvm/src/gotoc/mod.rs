@@ -161,7 +161,6 @@ impl<'tcx> GotocCtx<'tcx> {
     }
 
     fn should_skip_current_fn(&self) -> bool {
-        println!("Skipping current function: {}", self.current_fn().readable_name());
         match self.current_fn().readable_name() {
             // https://github.com/model-checking/rmc/issues/202
             "fmt::ArgumentV1::<'a>::as_usize" => true,
@@ -171,10 +170,15 @@ impl<'tcx> GotocCtx<'tcx> {
             "panic::Location::<'a>::caller" => true,
             // https://github.com/model-checking/rmc/issues/207
             "core::slice::<impl [T]>::split_first" => true,
-            // https://github.com/model-checking/rmc/issues/281
-            name if name.starts_with("bridge::client") => true,
+            // // https://github.com/model-checking/rmc/issues/281
+            // name if name.starts_with("bridge::client") => true,
             // https://github.com/model-checking/rmc/issues/282
+            "bridge::client::Ident::new::{closure#0}" => true,
+            "bridge::client::FreeFunctions::track_env_var" => true,
             "bridge::closure::Closure::<'a, A, R>::call" => true,
+            "bridge::client::FreeFunctions::track_env_var::{closure#0}" => true,
+            "bridge::client::TokenStreamBuilder::push" => true,
+            "bridge::client::TokenStreamBuilder::push::{closure#0}" => true,
             _ => false,
         }
     }
@@ -187,6 +191,7 @@ impl<'tcx> GotocCtx<'tcx> {
         if old_sym.is_function_definition() {
             warn!("Double codegen of {:?}", old_sym);
         } else if self.should_skip_current_fn() {
+            println!("Skipping current function: {}", self.current_fn().readable_name());
             debug!("Skipping function {}", self.current_fn().readable_name());
             let loc = self.codegen_span2(&self.current_fn().mir().span);
             let body = Stmt::assert_false(
