@@ -47,4 +47,7 @@ fn main() {
     assert!(a == 1);
     let b = <dyn T as B>::foo(&*t);
     assert!(b == 2);
+
+    println!("a: {}", a);
+    println!("b: {}", b);
 }
