@@ -1,0 +1,67 @@
+CBMC version 5.30.1 (cbmc-5.30.1) 64-bit x86_64 linux
+Parsing /home/ubuntu/rmc/library/rmc/rmc_lib.c
+Converting
+Type-checking rmc_lib
+Reading GOTO program from file
+Reading: /home/ubuntu/rmc/src/test/cbmc/DynTrait/vtable_duplicate_fields.goto
+Generating GOTO Program
+Adding CPROVER library (x86_64)
+Removal of function pointers and virtual functions
+replacing function pointer by 2 possible targets
+replacing function pointer by 2 possible targets
+Generic Property Instrumentation
+Running with 8 object bits, 56 offset bits (default)
+Starting Bounded Model Checking
+Runtime Symex: 0.00617394s
+size of program expression: 249 steps
+simple slicing removed 19 assignments
+Generated 3 VCC(s), 2 remaining after simplification
+Runtime Postprocess Equation: 1.5734e-05s
+Passing problem to propositional reduction
+converting SSA
+Runtime Convert SSA: 0.000969113s
+Running propositional reduction
+Post-processing
+Runtime Post-process: 1.4769e-05s
+Solving with MiniSAT 2.2.1 with simplifier
+2210 variables, 130 clauses
+SAT checker inconsistent: instance is UNSATISFIABLE
+Runtime Solver: 3.2826e-05s
+Runtime decision procedure: 0.00104168s
+
+** Results:
+[assertion.1] Code generation sanity check: Correct CBMC vtable size for Adt(Concrete, []). Please report failures:
+https://github.com/model-checking/rmc/issues/new?template=bug_report.md: SUCCESS
+/home/ubuntu/rmc/library/alloc/src/alloc.rs function _RINvNtCs30GEkudUMq1_5alloc5alloc8box_freeDNtCs21hi0yVfW1J_23vtable_duplicate_fields1TEL_NtB2_6GlobalEBG_
+[_RINvNtCs30GEkudUMq1_5alloc5alloc8box_freeDNtCs21hi0yVfW1J_23vtable_duplicate_fields1TEL_NtB2_6GlobalEBG_.assertion.1] line 329 resume instruction: SUCCESS
+
+/home/ubuntu/rmc/library/alloc/src/alloc.rs function _RNvMNtCs30GEkudUMq1_5alloc5allocNtB2_6Global10alloc_implCs21hi0yVfW1J_23vtable_duplicate_fields
+[_RNvMNtCs30GEkudUMq1_5alloc5allocNtB2_6Global10alloc_implCs21hi0yVfW1J_23vtable_duplicate_fields.assertion.1] line 167 unreachable code: SUCCESS
+
+/home/ubuntu/rmc/library/alloc/src/alloc.rs function _RNvNtCs30GEkudUMq1_5alloc5alloc15exchange_mallocCs21hi0yVfW1J_23vtable_duplicate_fields
+[_RNvNtCs30GEkudUMq1_5alloc5alloc15exchange_mallocCs21hi0yVfW1J_23vtable_duplicate_fields.assertion.2] line 316 unreachable code: SUCCESS
+[_RNvNtCs30GEkudUMq1_5alloc5alloc15exchange_mallocCs21hi0yVfW1J_23vtable_duplicate_fields.assertion.1] line 318 a panicking function std::alloc::handle_alloc_error is invoked: SUCCESS
+
+/home/ubuntu/rmc/library/core/src/option.rs function _RINvMNtCs9Odk7Lrvgnw_4core6optionINtB3_6OptionINtNtNtB5_3ptr8non_null7NonNullhEE5ok_orNtNtB5_5alloc10AllocErrorECs21hi0yVfW1J_23vtable_duplicate_fields
+[_RINvMNtCs9Odk7Lrvgnw_4core6optionINtB3_6OptionINtNtNtB5_3ptr8non_null7NonNullhEE5ok_orNtNtB5_5alloc10AllocErrorECs21hi0yVfW1J_23vtable_duplicate_fields.assertion.1] line 568 unreachable code: SUCCESS
+
+/home/ubuntu/rmc/library/core/src/ptr/mod.rs function _RINvNtCs9Odk7Lrvgnw_4core3ptr13drop_in_placeINtNtCs30GEkudUMq1_5alloc5boxed3BoxDNtCs21hi0yVfW1J_23vtable_duplicate_fields1TEL_EEB1i_
+[_RINvNtCs9Odk7Lrvgnw_4core3ptr13drop_in_placeINtNtCs30GEkudUMq1_5alloc5boxed3BoxDNtCs21hi0yVfW1J_23vtable_duplicate_fields1TEL_EEB1i_.assertion.1] line 192 resume instruction: SUCCESS
+
+/home/ubuntu/rmc/library/core/src/result.rs function _RNvXsy_NtCs9Odk7Lrvgnw_4core6resultINtB5_6ResultINtNtNtB7_3ptr8non_null7NonNullhENtNtB7_5alloc10AllocErrorENtNtNtB7_3ops9try_trait3Try6branchCs21hi0yVfW1J_23vtable_duplicate_fields
+[_RNvXsy_NtCs9Odk7Lrvgnw_4core6resultINtB5_6ResultINtNtNtB7_3ptr8non_null7NonNullhENtNtB7_5alloc10AllocErrorENtNtNtB7_3ops9try_trait3Try6branchCs21hi0yVfW1J_23vtable_duplicate_fields.assertion.1] line 1641 unreachable code: SUCCESS
+
+/home/ubuntu/rmc/src/test/cbmc/DynTrait/vtable_duplicate_fields.rs function main
+[main.assertion.5] line 44 resume instruction: SUCCESS
+[main.assertion.1] line 46 Non-null virtual function call for "::A::foo": SUCCESS
+[main.assertion.2] line 47 assertion failed: a == 1: SUCCESS
+[main.assertion.3] line 48 Non-null virtual function call for "::B::foo": SUCCESS
+[main.assertion.4] line 49 assertion failed: b == 2: SUCCESS
+
+<builtin-library-malloc> function malloc
+[malloc.assertion.1] line 26 max allocation size exceeded: SUCCESS
+[malloc.assertion.2] line 31 max allocation may fail: SUCCESS
+
+** 0 of 15 failed (1 iterations)
+VERIFICATION SUCCESSFUL
+
