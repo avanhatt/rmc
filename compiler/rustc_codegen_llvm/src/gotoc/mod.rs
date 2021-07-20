@@ -170,15 +170,15 @@ impl<'tcx> GotocCtx<'tcx> {
             "panic::Location::<'a>::caller" => true,
             // https://github.com/model-checking/rmc/issues/207
             "core::slice::<impl [T]>::split_first" => true,
-            // // https://github.com/model-checking/rmc/issues/281
-            // name if name.starts_with("bridge::client") => true,
+            // https://github.com/model-checking/rmc/issues/281
+            name if name.starts_with("bridge::client") => true,
             // https://github.com/model-checking/rmc/issues/282
-            "bridge::client::Ident::new::{closure#0}" => true,
-            "bridge::client::FreeFunctions::track_env_var" => true,
-            "bridge::closure::Closure::<'a, A, R>::call" => true,
-            "bridge::client::FreeFunctions::track_env_var::{closure#0}" => true,
-            "bridge::client::TokenStreamBuilder::push" => true,
-            "bridge::client::TokenStreamBuilder::push::{closure#0}" => true,
+            // "bridge::client::Ident::new::{closure#0}" => true,
+            // "bridge::client::FreeFunctions::track_env_var" => true,
+            // "bridge::closure::Closure::<'a, A, R>::call" => true,
+            // "bridge::client::FreeFunctions::track_env_var::{closure#0}" => true,
+            // "bridge::client::TokenStreamBuilder::push" => true,
+            // "bridge::client::TokenStreamBuilder::push::{closure#0}" => true,
             _ => false,
         }
     }
