@@ -42,6 +42,31 @@ pub trait GotocHook<'tcx> {
     ) -> Stmt;
 }
 
+fn output_of_instance_is_never<'tcx>(tcx: TyCtxt<'tcx>, instance: Instance<'tcx>) -> bool {
+    let ty = instance.ty(tcx, ty::ParamEnv::reveal_all());
+    match ty.kind() {
+        ty::Closure(_, substs) => tcx
+            .normalize_erasing_late_bound_regions(
+                ty::ParamEnv::reveal_all(),
+                substs.as_closure().sig(),
+            )
+            .output()
+            .is_never(),
+        ty::FnDef(..) | ty::FnPtr(..) => tcx
+            .normalize_erasing_late_bound_regions(ty::ParamEnv::reveal_all(), ty.fn_sig(tcx))
+            .output()
+            .is_never(),
+        ty::Generator(_, substs, _) => substs.as_generator().return_ty().is_never(),
+        _ => {
+            unreachable!(
+                "Can't take get ouput type of instance:\n{:?}\nType kind:\n{:?}",
+                ty,
+                ty.kind()
+            )
+        }
+    }
+}
+
 struct ExpectFail;
 impl<'tcx> GotocHook<'tcx> for ExpectFail {
     fn hook_applies(&self, tcx: TyCtxt<'tcx>, instance: Instance<'tcx>) -> bool {
@@ -166,9 +191,8 @@ struct Panic;
 
 impl<'tcx> GotocHook<'tcx> for Panic {
     fn hook_applies(&self, tcx: TyCtxt<'tcx>, instance: Instance<'tcx>) -> bool {
-        sig_of_instance(tcx, instance).output().is_never()
-            && (instance_name_is(tcx, instance, "begin_panic")
-                || instance_name_is(tcx, instance, "panic"))
+        output_of_instance_is_never(tcx, instance)
+            && (name_is(tcx, instance, "begin_panic") || name_is(tcx, instance, "panic"))
     }
 
     fn handle(
@@ -188,8 +212,7 @@ struct Nevers;
 
 impl<'tcx> GotocHook<'tcx> for Nevers {
     fn hook_applies(&self, tcx: TyCtxt<'tcx>, instance: Instance<'tcx>) -> bool {
-        let sig = sig_of_instance(tcx, instance);
-        sig.output().is_never()
+        output_of_instance_is_never(tcx, instance)
     }
 
     fn handle(

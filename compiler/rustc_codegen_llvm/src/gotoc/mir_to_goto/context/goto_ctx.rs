@@ -28,6 +28,7 @@ use rustc_data_structures::sync::MetadataRef;
 use rustc_hir::def_id::LOCAL_CRATE;
 use rustc_middle::middle::cstore::MetadataLoader;
 use rustc_middle::mir::interpret::Allocation;
+use rustc_middle::mir::mono::CodegenUnitNameBuilder;
 use rustc_middle::ty::layout::{HasParamEnv, HasTyCtxt, TyAndLayout};
 use rustc_middle::ty::{self, Instance, Ty, TyCtxt};
 use rustc_session::Session;
@@ -70,8 +71,19 @@ impl<'tcx> GotocCtx<'tcx> {
 
 /// Getters
 impl<'tcx> GotocCtx<'tcx> {
-    pub fn crate_name(&self) -> String {
+    /// The short crate name without versioning information.
+    pub fn short_crate_name(&self) -> String {
         self.tcx.crate_name(LOCAL_CRATE).to_string()
+    }
+
+    /// The full crate name should use the Codegen Unit builder to include full name resolution,
+    /// for example, the versioning information if a build requires two different versions
+    /// of the same crate.
+    pub fn full_crate_name(&self) -> String {
+        let name_builder = &mut CodegenUnitNameBuilder::new(self.tcx);
+        let info =
+            name_builder.build_cgu_name(LOCAL_CRATE, &[] as &[String; 0], None as Option<String>);
+        format!("{}{}", info, self.short_crate_name())
     }
 
     pub fn current_fn(&self) -> &CurrentFnCtx<'tcx> {
@@ -225,7 +237,7 @@ impl<'tcx> GotocCtx<'tcx> {
     pub fn next_global_name(&mut self) -> String {
         let c = self.global_var_count;
         self.global_var_count += 1;
-        format!("{}::global::{}::", self.tcx.crate_name(LOCAL_CRATE), c)
+        format!("{}::global::{}::", self.full_crate_name(), c)
     }
 }
 

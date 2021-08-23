@@ -4,7 +4,6 @@ use crate::gotoc::cbmc::goto_program::{Expr, Location, Stmt, Symbol, Type};
 use crate::gotoc::mir_to_goto::utils::slice_fat_ptr;
 use crate::gotoc::mir_to_goto::GotocCtx;
 use rustc_ast::ast::Mutability;
-use rustc_hir::def_id::LOCAL_CRATE;
 use rustc_middle::mir::interpret::{
     read_target_uint, AllocId, Allocation, ConstValue, GlobalAlloc, Scalar,
 };
@@ -353,8 +352,10 @@ impl<'tcx> GotocCtx<'tcx> {
                 sym.clone().to_expr().address_of()
             }
             GlobalAlloc::Memory(alloc) => {
-                // crate_name added so that allocations in different crates don't clash
-                let crate_name = self.tcx.crate_name(LOCAL_CRATE);
+                // Full (mangled) crate name added so that allocations from different
+                // crates do not conflict. The name alone is insufficient becase Rust
+                // allows different versions of the same crate to be used.
+                let crate_name = self.full_crate_name();
                 let name = format!("{}::{:?}", crate_name, alloc_id);
                 self.codegen_allocation(alloc, |_| name.clone(), Some(name.clone()))
             }
@@ -572,7 +573,7 @@ impl<'tcx> GotocCtx<'tcx> {
 
     pub fn codegen_func_expr(&mut self, instance: Instance<'tcx>, span: Option<&Span>) -> Expr {
         let func = self.symbol_name(instance);
-        let funct = self.codegen_function_sig(self.fn_sig_of_instance(instance));
+        let funct = self.codegen_function_sig(self.fn_sig_of_instance(instance).unwrap());
         // make sure the functions imported from other modules are in the symbol table
         self.ensure(&func, |ctx, _| {
             Symbol::function(

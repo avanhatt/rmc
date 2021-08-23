@@ -1,0 +1,45 @@
+"func":"Expr"{
+   "value":"Symbol"{
+      "identifier":"_ZN4core3ptr60drop_in_place$LT$proc_macro..bridge..client..TokenStream$GT$17hff48240f36f1a1e6E"
+   },
+   "typ":"Code"{
+      "parameters":[
+         "Parameter"{
+            "typ":"Pointer"{
+               "typ":"StructTag(""tag-bridge::client::TokenStream"")"
+            },
+            "identifier":"None",
+            "base_name":"None"
+         }
+      ],
+      "return_type":"StructTag(""tag-Unit"")"
+   },
+   "location":"None"
+}"args":[
+   "Expr"{
+      "value":"AddressOf(Expr"{
+         "value":"Member"{
+            "lhs":"Expr"{
+               "value":"Dereference(Expr"{
+                  "value":"Symbol"{
+                     "identifier":"_ZN4core3ptr100drop_in_place$LT$proc_macro..bridge..client..TokenStream..into_iter..$u7b$$u7b$closure$u7d$$u7d$$GT$17h636911fa69915074E::1::var_1"
+                  },
+                  "typ":"Pointer"{
+                     "typ":"StructTag(""tag-[closure@/home/ubuntu/rmc/build/x86_64-unknown-linux-gnu/stage1/lib/rustlib/src/rust/library/proc_macro/src/bridge/client.rs:237:30: 251:18]"")"
+                  },
+                  "location":"None"
+               }")",
+               "typ":"StructTag(""tag-[closure@/home/ubuntu/rmc/build/x86_64-unknown-linux-gnu/stage1/lib/rustlib/src/rust/library/proc_macro/src/bridge/client.rs:237:30: 251:18]"")",
+               "location":"None"
+            },
+            "field":"0"
+         },
+         "typ":"StructTag(""tag-bridge::client::SourceFile"")",
+         "location":"None"
+      }")",
+      "typ":"Pointer"{
+         "typ":"StructTag(""tag-bridge::client::SourceFile"")"
+      },
+      "location":"None"
+   }
+]

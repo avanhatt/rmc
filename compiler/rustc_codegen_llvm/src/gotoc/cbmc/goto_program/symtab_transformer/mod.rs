@@ -4,6 +4,7 @@
 
 mod gen_c_transformer;
 mod identity_transformer;
+mod param_symbol_transformer;
 mod passes;
 mod transformer;
 
