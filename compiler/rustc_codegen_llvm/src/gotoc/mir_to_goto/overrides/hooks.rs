@@ -10,13 +10,12 @@
 
 use super::stubs::{HashMapStub, VecStub};
 use crate::gotoc::cbmc::goto_program::{BuiltinFn, Expr, Location, Stmt, Symbol, Type};
-use crate::gotoc::mir_to_goto::utils::{
-    instance_name_is, instance_name_starts_with, sig_of_instance,
-};
+use crate::gotoc::mir_to_goto::utils::{instance_name_is, instance_name_starts_with};
 use crate::gotoc::mir_to_goto::GotocCtx;
 use rustc_hir::definitions::DefPathDataName;
 use rustc_middle::mir::{BasicBlock, Place};
 use rustc_middle::ty::print::with_no_trimmed_paths;
+use rustc_middle::ty::{self};
 use rustc_middle::ty::{Instance, InstanceDef, Ty, TyCtxt};
 use rustc_span::Span;
 use rustc_target::abi::LayoutOf;
@@ -192,7 +191,8 @@ struct Panic;
 impl<'tcx> GotocHook<'tcx> for Panic {
     fn hook_applies(&self, tcx: TyCtxt<'tcx>, instance: Instance<'tcx>) -> bool {
         output_of_instance_is_never(tcx, instance)
-            && (name_is(tcx, instance, "begin_panic") || name_is(tcx, instance, "panic"))
+            && (instance_name_is(tcx, instance, "begin_panic")
+                || instance_name_is(tcx, instance, "panic"))
     }
 
     fn handle(
