@@ -15,7 +15,6 @@ pub struct ParameterSymbolTransformer {
 impl ParameterSymbolTransformer {
     /// Perform an identity transformation on the given symbol table.
     pub fn transform(original_symbol_table: &SymbolTable) -> SymbolTable {
-        dbg!("Running parameter symbol transformer");
         let new_symbol_table = SymbolTable::new(original_symbol_table.machine_model().clone());
 
         ParameterSymbolTransformer { new_symbol_table }

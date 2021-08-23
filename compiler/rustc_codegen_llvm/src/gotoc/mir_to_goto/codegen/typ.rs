@@ -366,6 +366,7 @@ impl<'tcx> GotocCtx<'tcx> {
         use rustc_middle::ty::print::Printer;
         let mut name = String::new();
         let printer = FmtPrinter::new(self.tcx, &mut name, Namespace::TypeNS);
+        let t = self.monomorphize(t);
         with_no_trimmed_paths(|| printer.print_type(t).unwrap());
         // TODO: The following line is a temporary measure to remove the static lifetime
         // appearing as \'static in mangled type names.  This should be done using regular
@@ -375,7 +376,9 @@ impl<'tcx> GotocCtx<'tcx> {
         // code.  See the implementation of pretty_print_region on line 1720 in
         // compiler/rustc_middle/src/ty/print/pretty.rs.
         let name = name.replace(" + \'static", "").replace("\'static ", "");
-        name
+        // Crate resolution
+        let id_u64 = self.tcx.type_id_hash(t);
+        format!("{}::{}", name, id_u64)
     }
 
     #[allow(dead_code)]
@@ -1119,7 +1122,6 @@ impl<'tcx> GotocCtx<'tcx> {
     pub fn fn_typ(&mut self) -> Type {
         let sig = self.current_fn().sig();
         if sig.is_none() {
-            dbg!("sig is none");
             return Type::code(vec![], Type::empty());
         }
         let sig =
