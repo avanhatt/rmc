@@ -368,14 +368,6 @@ impl<'tcx> GotocCtx<'tcx> {
         let printer = FmtPrinter::new(self.tcx, &mut name, Namespace::TypeNS);
         let t = self.monomorphize(t);
         with_no_trimmed_paths(|| printer.print_type(t).unwrap());
-        // TODO: The following line is a temporary measure to remove the static lifetime
-        // appearing as \'static in mangled type names.  This should be done using regular
-        // expressions to handle more or less whitespace around the lifetime, but this
-        // requires adding the regex module to the dependencies in Cargo.toml.  This should
-        // probably be done modifying the rustc pretty printer, but that is deep in the rustc
-        // code.  See the implementation of pretty_print_region on line 1720 in
-        // compiler/rustc_middle/src/ty/print/pretty.rs.
-        let name = name.replace(" + \'static", "").replace("\'static ", "");
         // Crate resolution
         let id_u64 = self.tcx.type_id_hash(t);
         format!("{}::{}", name, id_u64)
