@@ -25,6 +25,48 @@ impl<'tcx> GotocCtx<'tcx> {
             name if name.starts_with("bridge::client") => true,
             // https://github.com/model-checking/rmc/issues/282
             "bridge::closure::Closure::<'a, A, R>::call" => true,
+            // TODO: document!
+            "sys::unix::thread_local_dtor::register_dtor" => true,
+
+            // "<&T as std::fmt::Debug>::fmt" => true, THIS?
+            // https://github.com/model-checking/rmc/issues/207
+            name if name.starts_with("core::slice::<impl [T]>::split_last") => true,
+            // https://github.com/model-checking/rmc/issues/414
+            name if name.starts_with("core::num::<impl u128>") => true,
+            // Missing vector intrinsics
+            name if name.starts_with("std::arch::x86_64") => true,
+            name if name.starts_with("core::core_arch::x86") => true,
+            // name if name.starts_with("std::sync::atomic") => true,
+            // crossbeam epoch, can't reproduce
+            name if name.starts_with("deferred::Deferred::new") => true,
+            "std::error::<impl std::convert::From<E> for std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'a)>>::from" => {
+                true
+            }
+            "conn::CommonState::process_main_protocol" => true,
+            "server::ServerSessionImpl::process_main_protocol" => true,
+            name if name.contains("client::hs::State>::handle") => true,
+            "client::ClientSessionImpl::process_main_protocol" => true,
+            "<futures_task::LocalFutureObj<'_, T> as futures_core::Future>::poll" => true,
+            "declare_function: net::tcp::split::ReadHalf::<'_>::peek" => true,
+            name if name.starts_with("<error::Error as std::fmt::Display>::fmt") => true,
+            // Generators
+            name if name.starts_with("<std::future::from_generator::GenFuture<T>") => true,
+            "signal::make_future::{closure#0}" => true,
+            name if name.contains("reusable_box::ReusableBoxFuture") => true,
+            "tokio::sync::Semaphore::acquire_owned::{closure#0}" => true,
+            "sync::watch::Receiver::<T>::changed::{closure#0}" => true,
+            // vtable size
+            name if name.starts_with("levenshtein::levenshtein_search_simd") => true,
+            // clap: unable to find field "cache" for type StructTag("tag-str")
+            name if name
+                .starts_with("app::parser::Parser::<'a, 'b>::get_matches_with::{closure") =>
+            {
+                true
+            }
+            "std::hint::black_box" => true,
+            "std::sync::atomic::atomic_compare_exchange_weak" => true,
+            // this breaks many things!
+            // "std::ptr::drop_in_place" => true,
             _ => false,
         }
     }
