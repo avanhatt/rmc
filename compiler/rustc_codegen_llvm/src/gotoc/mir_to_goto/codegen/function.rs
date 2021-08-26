@@ -37,7 +37,7 @@ impl<'tcx> GotocCtx<'tcx> {
             name if name.starts_with("std::arch::x86_64") => true,
             name if name.starts_with("core::core_arch::x86") => true,
             // name if name.starts_with("std::sync::atomic") => true,
-            // crossbeam epoch, can't reproduce
+            // // crossbeam epoch, can't reproduce
             name if name.starts_with("deferred::Deferred::new") => true,
             "std::error::<impl std::convert::From<E> for std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'a)>>::from" => {
                 true
@@ -109,7 +109,7 @@ impl<'tcx> GotocCtx<'tcx> {
         if old_sym.is_function_definition() {
             warn!("Double codegen of {:?}", old_sym);
         } else if self.should_skip_current_fn() {
-            debug!("Skipping function {}", self.current_fn().readable_name());
+            dbg!(format!("Skipping function {}", self.current_fn().readable_name()));
             let loc = self.codegen_span(&self.current_fn().mir().span);
             let body = Stmt::assert_false(
                 &format!(
