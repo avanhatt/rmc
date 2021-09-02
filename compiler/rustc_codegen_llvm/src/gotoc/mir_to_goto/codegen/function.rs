@@ -25,6 +25,10 @@ impl<'tcx> GotocCtx<'tcx> {
             name if name.starts_with("bridge::client") => true,
             // https://github.com/model-checking/rmc/issues/282
             "bridge::closure::Closure::<'a, A, R>::call" => true,
+            // Unimplemented intrinsic
+            name if name.ends_with("reverse_bits") => true,
+            // Equality failure
+            "std::ptr::eq" => true,
             _ => false,
         }
     }
