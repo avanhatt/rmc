@@ -1,5 +1,12 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+
+
+#[macro_use]
+extern crate smack;
+use smack::*;
+
+
 trait WeirdAdd {
     fn add(&self, rhs: i32) -> i32;
 }
@@ -23,7 +30,7 @@ fn main() {
     let y = 4;
 
     let std_add = std_add(x, y);
-    assert!(std_add == 6);
+    smack::assert!(std_add == 6);
     let weird_add = weird_add(&x as &dyn WeirdAdd, y);
-    assert!(weird_add == 3);
+    smack::assert!(weird_add == 3);
 }

@@ -1,5 +1,10 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+
+#[macro_use]
+extern crate smack;
+use smack::*;
+
 trait A {
     fn foo(&self) -> i32;
 }
@@ -48,9 +53,9 @@ impl T for S {
 fn main() {
     let t = S::new_box(1, 2, 3);
     let a = <dyn T as A>::foo(&*t);
-    assert!(a == 1);
+    smack::assert!(a == 1);
     let b = <dyn T as B>::foo(&*t);
-    assert!(b == 2);
+    smack::assert!(b == 2);
     let t_value = T::foo(&*t);
-    assert!(t_value == 3);
+    smack::assert!(t_value == 3);
 }

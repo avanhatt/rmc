@@ -5,6 +5,10 @@
 // This test uses a trait defined in a different crate (the standard library)
 // and a test defined in the local crate. The goal is to test vtable resolution
 // of duplicate names across different crates.
+#[macro_use]
+extern crate smack;
+use smack::*;
+
 struct Counter {
     count: usize,
 }
@@ -45,10 +49,10 @@ fn weird_count(c: &mut dyn Iterator) -> usize {
 
 fn main() {
     let counter: &mut Counter = &mut Counter { count: 0 };
-    assert!(std_count(counter as &mut dyn std::iter::Iterator<Item = usize>) == 0); // Should be 1
-    assert!(weird_count(counter as &mut dyn Iterator) == 0); // Should be 42
+    smack::assert!(std_count(counter as &mut dyn std::iter::Iterator<Item = usize>) == 0); // Should be 1
+    smack::assert!(weird_count(counter as &mut dyn Iterator) == 0); // Should be 42
 
     let counter_combined = counter as &mut dyn Combined;
-    assert!(std::iter::Iterator::next(counter_combined).unwrap() == 0); // Should be 2
-    assert!(Iterator::next(counter_combined).unwrap() == 0); // Should be 42
+    smack::assert!(std::iter::Iterator::next(counter_combined).unwrap() == 0); // Should be 2
+    smack::assert!(Iterator::next(counter_combined).unwrap() == 0); // Should be 42
 }

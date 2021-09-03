@@ -3,6 +3,10 @@
 
 // Check drop implementation for a concrete, non-trait object.
 
+#[macro_use]
+extern crate smack;
+use smack::*;
+
 static mut CELL: i32 = 0;
 
 struct Concrete1;
@@ -20,6 +24,6 @@ fn main() {
         let _x1 = Concrete1 {};
     }
     unsafe {
-        assert!(CELL == 1);
+        smack::assert!(CELL == 1);
     }
 }

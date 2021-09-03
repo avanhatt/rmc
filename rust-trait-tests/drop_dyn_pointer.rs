@@ -3,6 +3,10 @@
 
 // Check drop implementation for an &dyn dynamic trait object.
 
+#[macro_use]
+extern crate smack;
+use smack::*;
+
 static mut CELL: i32 = 0;
 
 trait T {
@@ -38,12 +42,12 @@ fn main() {
         let _x1: &dyn T = &Concrete1 {};
     }
     unsafe {
-        assert!(CELL == 1);
+        smack::assert!(CELL == 1);
     }
     {
         let _x2: &dyn T = &Concrete2 {};
     }
     unsafe {
-        assert!(CELL == 2);
+        smack::assert!(CELL == 2);
     }
 }

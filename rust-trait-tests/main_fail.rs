@@ -1,6 +1,10 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
+#[macro_use]
+extern crate smack;
+use smack::*;
+
 struct Sheep {}
 struct Cow {}
 
@@ -34,9 +38,9 @@ fn main() {
         let animal = random_animal(random_number);
         let s = animal.noise();
         if (random_number < 5) {
-            assert!(s != 1);
+            smack::assert!(s != 1);
         } else {
-            assert!(s != 2);
+            smack::assert!(s != 2);
         }
     }
     {
@@ -44,9 +48,9 @@ fn main() {
         let animal = random_animal(random_number);
         let s = animal.noise();
         if (random_number < 5) {
-            assert!(s != 1);
+            smack::assert!(s != 1);
         } else {
-            assert!(s != 2);
+            smack::assert!(s != 2);
         }
     }
 }

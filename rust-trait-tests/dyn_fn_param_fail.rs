@@ -7,6 +7,10 @@
 
 #![feature(ptr_metadata)]
 
+#[macro_use]
+extern crate smack;
+use smack::*;
+
 macro_rules! vtable {
     ($f:ident) => {{
         unsafe {
@@ -23,14 +27,14 @@ fn size_from_vtable(vtable_ptr: std::ptr::DynMetadata<dyn std::any::Any>) -> usi
 
 fn takes_dyn_fun(fun: &dyn Fn() -> u32) {
     let x = fun();
-    assert!(x != 5);
+    smack::assert!(x != 5);
 
     /* The function dynamic object has no associated data */
-    assert!(size_from_vtable(vtable!(fun)) != 0);
+    smack::assert!(size_from_vtable(vtable!(fun)) != 0);
 }
 
 pub fn unit_to_u32() -> u32 {
-    assert!(false);
+    smack::assert!(false);
     5 as u32
 }
 

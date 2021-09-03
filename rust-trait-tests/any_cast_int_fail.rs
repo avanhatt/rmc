@@ -3,6 +3,10 @@
 
 use std::any::Any;
 
+#[macro_use]
+extern crate smack;
+use smack::*;
+
 // Cast one dynamic trait object type to another, which is legal because Send
 // is an auto trait with no associated function (so the underlying vtable is
 // the same before and after the cast).
@@ -13,10 +17,10 @@ use std::any::Any;
 fn downcast_to_concrete(a: &dyn Any) {
     match a.downcast_ref::<i32>() {
         Some(i) => {
-            assert!(*i == 8);
+            smack::assert!(*i == 8);
         }
         None => {
-            assert!(false);
+            smack::assert!(false);
         }
     }
 }

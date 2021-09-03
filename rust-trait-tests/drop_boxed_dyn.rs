@@ -2,6 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
 // Check drop implementation for a boxed dynamic trait object.
+
+#[macro_use]
+extern crate smack;
+use smack::*;
+
 static mut CELL: i32 = 0;
 
 trait T {
@@ -42,6 +47,6 @@ fn main() {
         }
     }
     unsafe {
-        assert!(CELL == 1 || CELL == 2);
+        smack::assert!(CELL == 1 || CELL == 2);
     }
 }
