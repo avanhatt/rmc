@@ -2,7 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 import argparse
-import subprocess
+from datetime import datetime
+import os
+import subprocess as sp
+import time
 
 ITERATIONS = 10
 FUNCTIONS = 2
@@ -53,6 +56,7 @@ use smack::assert;
 """
 
 def build_rs(iterations, functions):
+    """Build synthetic Rust file for given parameters"""
     rs = trait_def
 
     # Define a struct per dynamic function
@@ -73,6 +77,60 @@ def build_rs(iterations, functions):
 
     return rs
 
+def run_rmc(results_dir, test, rust_file):  
+    """Run and time RMC on a given file"""
+    rmc_cmd = ["rmc", rust_file]
+    rmc_log_file = os.path.join(results_dir, "{}_rmc_log.txt".format(test))
+
+    with open(rmc_log_file, 'w+') as log:
+        start_time = time.time()
+        gen = sp.Popen(rmc_cmd, stderr=log, stdout=log)
+        gen.communicate()
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print("RMC for {} ran in {:.1f} seconds".format(test, elapsed_time))
+
+    with open(rmc_log_file, 'r') as log:
+        # Check for expected verification failure
+        log_contents = log.read()
+        if "VERIFICATION FAILED" not in log_contents:
+            print("ERROR: expected verification failure not found for {}", test)
+            exit(1)
+
+
+def run_smack(results_dir, test, rust_file, iterations):  
+    """Run and time SMACK on a given file"""
+    smack_file = os.path.join(results_dir, "smack_{}.rs".format(test))
+    with open(smack_file, 'w+') as smack:
+        smack.write(smack_prelude)
+        with open(rust_file, 'r') as rust:
+            smack.write(rust.read())
+
+    smack_cmd = ["smack", smack_file, "--unroll", "{}".format(iterations)]
+    smack_log_file = os.path.join(results_dir, "{}_log.txt".format(test))
+
+    with open(smack_log_file, 'w+') as log:
+        start_time = time.time()
+        gen = sp.Popen(smack_cmd, stderr=log, stdout=log)
+        gen.communicate()
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print("SMACK for {} ran in {:.1f} seconds".format(test, elapsed_time))
+
+    with open(smack_log_file, 'r') as log:
+        # Check for expected verification failure
+        log_contents = log.read()
+        if "SMACK found an error" not in log_contents:
+            print("ERROR: expected verification failure not found for {}", test)
+            print(log_contents)
+            exit(1)
+
+
+def make_dir(d):
+    """Makes a directory if it does not already exist"""
+    if not os.path.exists(d):
+        os.mkdir(d)
+
 
 def main():
 
@@ -90,14 +148,26 @@ def main():
     assert(maxfuns >= args.funs)
     assert(maxi >= args.i)
 
+    # Create a subdirectory with the commit and datetime
+    rev = sp.check_output(["git", "rev-parse", "--short", "HEAD"])
+    rev = rev.decode("utf-8").strip()
+    date = datetime.now().strftime('%Y-%m-%d_%H-%M')
+    results_dir = 'synthetic_dynamic_dispatch_{}_{}'.format(date, rev)
+    make_dir(results_dir)
+    print("Writing results to: {}".format(results_dir))
+
+    # Create each Rust file
     for i in range(args.i, maxi + 1):
         for f in range(args.funs, maxfuns + 1):
             rs = build_rs(i, f)
-            filename = "dynamic_dispatch_{}i_{}f.rs".format(i, f)
-            print(filename)
-            with open(filename, 'w') as writer:
+            test = "{}i_{}f".format(i, f)
+            rust_file = os.path.join(results_dir, "{}.rs".format(test))
+            with open(rust_file, 'w') as writer:
                 writer.write(rs)
-
+            
+            # Run RMC
+            run_rmc(results_dir, test, rust_file)
+            run_smack(results_dir, test, rust_file, i)
 
 if __name__ == "__main__":
     main()
