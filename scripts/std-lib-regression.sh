@@ -9,9 +9,9 @@ RMC_DIR=$SCRIPT_DIR/..
 # Log output
 echo "Starting RMC codegen for the Rust standard library"
 cd /tmp
-if [ -d StdLibTest ]; then rm -rf StdLibTest; fi
-cargo new --lib StdLibTest
-cd StdLibTest
+if [ -d std_lib_test ]; then rm -rf std_lib_test; fi
+cargo new --lib std_lib_test
+cd std_lib_test
 
 # Check that we have the nighly toolchain, which is required for -Z build-std
 if ! rustup toolchain list | grep -q nightly; then
