@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 import argparse
+import csv
 from datetime import datetime
 import os
 import subprocess as sp
@@ -9,6 +10,7 @@ import time
 
 ITERATIONS = 10
 FUNCTIONS = 2
+FIELDNAMES = ['tool', 'iterations', 'functions', 'time']
 
 trait_def = """
 trait A {
@@ -77,7 +79,7 @@ def build_rs(iterations, functions):
 
     return rs
 
-def run_rmc(results_dir, test, rust_file):  
+def run_rmc(results_dir, results_file, test, rust_file, iterations, functions):  
     """Run and time RMC on a given file"""
     rmc_cmd = ["rmc", rust_file]
     rmc_log_file = os.path.join(results_dir, "{}_rmc_log.txt".format(test))
@@ -97,8 +99,17 @@ def run_rmc(results_dir, test, rust_file):
             print("ERROR: expected verification failure not found for {}", test)
             exit(1)
 
+    with open(results_file, 'a+') as results:
+        writer = csv.DictWriter(results, fieldnames=FIELDNAMES)
+        writer.writerow({
+            'tool' : 'rmc', 
+            'iterations' : iterations, 
+            'functions' : functions, 
+            'time' : elapsed_time,
+        })
 
-def run_smack(results_dir, test, rust_file, iterations):  
+
+def run_smack(results_dir, results_file, test, rust_file, iterations, functions):  
     """Run and time SMACK on a given file"""
     smack_file = os.path.join(results_dir, "smack_{}.rs".format(test))
     with open(smack_file, 'w+') as smack:
@@ -125,12 +136,19 @@ def run_smack(results_dir, test, rust_file, iterations):
             print(log_contents)
             exit(1)
 
+    with open(results_file, 'a+') as results:
+        writer = csv.DictWriter(results, fieldnames=FIELDNAMES)
+        writer.writerow({
+            'tool' : 'smack', 
+            'iterations' : iterations, 
+            'functions' : functions, 
+            'time' : elapsed_time,
+        })
 
 def make_dir(d):
     """Makes a directory if it does not already exist"""
     if not os.path.exists(d):
         os.mkdir(d)
-
 
 def main():
 
@@ -156,18 +174,24 @@ def main():
     make_dir(results_dir)
     print("Writing results to: {}".format(results_dir))
 
+    # Results CSV 
+    results_file = os.path.join(results_dir, "results.csv")
+    with open(results_file, 'w+') as results:
+        writer = csv.DictWriter(results, fieldnames=FIELDNAMES)
+        writer.writeheader()
+
     # Create each Rust file
-    for i in range(args.i, maxi + 1):
+    for i in range(args.i, maxi + 1, 10):
         for f in range(args.funs, maxfuns + 1):
             rs = build_rs(i, f)
             test = "{}i_{}f".format(i, f)
             rust_file = os.path.join(results_dir, "{}.rs".format(test))
-            with open(rust_file, 'w') as writer:
-                writer.write(rs)
+            with open(rust_file, 'w') as rust:
+                rust.write(rs)
             
             # Run RMC
-            run_rmc(results_dir, test, rust_file)
-            run_smack(results_dir, test, rust_file, i)
+            run_rmc(results_dir, results_file, test, rust_file, i, f)
+            run_smack(results_dir, results_file, test, rust_file, i, f)
 
 if __name__ == "__main__":
     main()
