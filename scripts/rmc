@@ -27,7 +27,7 @@ def main():
         json_runnable_filename = base + "_runnable.json"
         goto_runnable_filename = base + "_runnable.goto"
         c_runnable_filename = base + "_runnable.c"
-        if EXIT_CODE_SUCCESS != rmc.compile_single_rust_file(args.input, json_runnable_filename, args.verbose, args.debug, args.keep_temps, args.mangler, args.dry_run, ["gen-c"]):
+        if EXIT_CODE_SUCCESS != rmc.compile_single_rust_file(args.input, json_runnable_filename, args.verbose, args.debug, args.keep_temps, args.mangler, args.dry_run, ["gen-c", "parameter"]):
             return 1
 
         if EXIT_CODE_SUCCESS != rmc.symbol_table_to_gotoc(json_runnable_filename, goto_runnable_filename, args.verbose, args.keep_temps, args.dry_run):

@@ -25,6 +25,47 @@ impl<'tcx> GotocCtx<'tcx> {
             name if name.starts_with("bridge::client") => true,
             // https://github.com/model-checking/rmc/issues/282
             "bridge::closure::Closure::<'a, A, R>::call" => true,
+            // TODO: document!
+            "sys::unix::thread_local_dtor::register_dtor" => true,
+
+            // "<&T as std::fmt::Debug>::fmt" => true, THIS?
+            // https://github.com/model-checking/rmc/issues/207
+            name if name.starts_with("core::slice::<impl [T]>::split_last") => true,
+            // https://github.com/model-checking/rmc/issues/414
+            name if name.starts_with("core::num::<impl u128>") => true,
+            // Missing vector intrinsics
+            name if name.starts_with("std::arch::x86_64") => true,
+            name if name.starts_with("core::core_arch::x86") => true,
+            // name if name.starts_with("std::sync::atomic") => true,
+            // // crossbeam epoch, can't reproduce
+            name if name.starts_with("deferred::Deferred::new") => true,
+            "std::error::<impl std::convert::From<E> for std::boxed::Box<(dyn std::error::Error + std::marker::Send + std::marker::Sync + 'a)>>::from" => {
+                true
+            }
+            "conn::CommonState::process_main_protocol" => true,
+            "server::ServerSessionImpl::process_main_protocol" => true,
+            name if name.contains("client::hs::State>::handle") => true,
+            "client::ClientSessionImpl::process_main_protocol" => true,
+            "<futures_task::LocalFutureObj<'_, T> as futures_core::Future>::poll" => true,
+            "declare_function: net::tcp::split::ReadHalf::<'_>::peek" => true,
+            name if name.starts_with("<error::Error as std::fmt::Display>::fmt") => true,
+            // Generators
+            name if name.starts_with("<std::future::from_generator::GenFuture<T>") => true,
+            "signal::make_future::{closure#0}" => true,
+            name if name.contains("reusable_box::ReusableBoxFuture") => true,
+            "tokio::sync::Semaphore::acquire_owned::{closure#0}" => true,
+            "sync::watch::Receiver::<T>::changed::{closure#0}" => true,
+            // vtable size
+            name if name.starts_with("levenshtein::levenshtein_search_simd") => true,
+            // clap: unable to find field "cache" for type StructTag("tag-str")
+            name if name
+                .starts_with("app::parser::Parser::<'a, 'b>::get_matches_with::{closure") =>
+            {
+                true
+            }
+            "std::sync::atomic::atomic_compare_exchange_weak" => true,
+            // this breaks many things!
+            // "std::ptr::drop_in_place" => true,
             _ => false,
         }
     }
@@ -64,11 +105,10 @@ impl<'tcx> GotocCtx<'tcx> {
         self.set_current_fn(instance);
         let name = self.current_fn().name();
         let old_sym = self.symbol_table.lookup(&name).unwrap();
-        assert!(old_sym.is_function());
         if old_sym.is_function_definition() {
             warn!("Double codegen of {:?}", old_sym);
         } else if self.should_skip_current_fn() {
-            debug!("Skipping function {}", self.current_fn().readable_name());
+            dbg!(format!("Skipping function {}", self.current_fn().readable_name()));
             let loc = self.codegen_span(&self.current_fn().mir().span);
             let body = Stmt::assert_false(
                 &format!(
@@ -79,6 +119,7 @@ impl<'tcx> GotocCtx<'tcx> {
             );
             self.symbol_table.update_fn_declaration_with_definition(&name, body);
         } else {
+            assert!(old_sym.is_function());
             let mir = self.current_fn().mir();
             self.print_instance(instance, mir);
             let labels = self

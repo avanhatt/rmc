@@ -29,6 +29,7 @@ OVERFLOW_CHECKS = ["--conversion-check",
                    "--undefined-shift-check",
                    "--unsigned-overflow-check"]
 UNWINDING_CHECKS = ["--unwinding-assertions"]
+SYMBOL_TABLE_PASSES = ["parameter"]
 
 # A Scanner is intended to match a pattern with an output
 # and edit the output based on an edit function
@@ -138,7 +139,7 @@ def run_cmd(cmd, label=None, cwd=None, env=None, output_to=None, quiet=False, ve
     return process.returncode
 
 # Generates a symbol table from a rust file
-def compile_single_rust_file(input_filename, output_filename, verbose=False, debug=False, keep_temps=False, mangler="v0", dry_run=False, use_abs=False, abs_type="std", symbol_table_passes=[]):
+def compile_single_rust_file(input_filename, output_filename, verbose=False, debug=False, keep_temps=False, mangler="v0", dry_run=False, use_abs=False, abs_type="std", symbol_table_passes=SYMBOL_TABLE_PASSES):
     if not keep_temps:
         atexit.register(delete_file, output_filename)
 
@@ -165,7 +166,7 @@ def compile_single_rust_file(input_filename, output_filename, verbose=False, deb
     return run_cmd(build_cmd, env=build_env, label="compile", verbose=verbose, debug=debug, dry_run=dry_run)
 
 # Generates a symbol table (and some other artifacts) from a rust crate
-def cargo_build(crate, target_dir="target", verbose=False, debug=False, mangler="v0", dry_run=False, symbol_table_passes=[]):
+def cargo_build(crate, target_dir="target", verbose=False, debug=False, mangler="v0", dry_run=False, symbol_table_passes=SYMBOL_TABLE_PASSES):
     ensure(os.path.isdir(crate), f"Invalid path to crate: {crate}")
 
     rustflags = [

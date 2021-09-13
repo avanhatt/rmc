@@ -28,6 +28,7 @@ use rustc_data_structures::stable_map::FxHashMap;
 use rustc_data_structures::sync::MetadataRef;
 use rustc_middle::middle::cstore::MetadataLoader;
 use rustc_middle::mir::interpret::Allocation;
+use rustc_middle::mir::mono::CodegenUnitNameBuilder;
 use rustc_middle::span_bug;
 use rustc_middle::ty::layout::{HasParamEnv, HasTyCtxt, LayoutError, LayoutOfHelpers, TyAndLayout};
 use rustc_middle::ty::{self, Instance, Ty, TyCtxt};

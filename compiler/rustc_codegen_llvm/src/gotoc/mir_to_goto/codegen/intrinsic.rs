@@ -60,7 +60,9 @@ impl<'tcx> GotocCtx<'tcx> {
                 let dst = fargs.remove(0).cast_to(Type::void_pointer());
                 let count = fargs.remove(0);
                 let sz = {
-                    match self.fn_sig_of_instance(instance).skip_binder().inputs()[0].kind() {
+                    match self.fn_sig_of_instance(instance).unwrap().skip_binder().inputs()[0]
+                        .kind()
+                    {
                         ty::RawPtr(t) => {
                             let layout = self.layout_of(t.ty);
                             Expr::int_constant(layout.size.bytes(), Type::size_t())
