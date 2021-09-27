@@ -423,7 +423,7 @@ impl<'tcx> GotocCtx<'tcx> {
     ) -> Vec<Stmt> {
         let vtable_field_name = self.vtable_field_name(def_id, idx);
         self.vtable_ctx.add_call_site(
-            trait_fat_ptr.typ().to_identifier(),
+            trait_fat_ptr.typ().type_name().unwrap().replace("tag-", ""),
             idx,
             self.current_fn().name(),
         );

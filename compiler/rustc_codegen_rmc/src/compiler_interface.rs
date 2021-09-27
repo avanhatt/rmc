@@ -119,6 +119,10 @@ impl CodegenBackend for GotocCodegenBackend {
             &tcx.sess.opts.debugging_opts.symbol_table_passes,
         );
 
+        // write out virtual function pointer restrictions
+        dbg!("AVH compiler interface?");
+        c.vtable_ctx.write_out_function_restrictions();
+
         Box::new(GotocCodegenResult {
             symtab: symbol_table,
             crate_name: tcx.crate_name(LOCAL_CRATE) as rustc_span::Symbol,

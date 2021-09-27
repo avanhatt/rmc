@@ -1,6 +1,18 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
+/// CBMC uses a very loose heuristic to reason about function pointers: it 
+/// assumes any function of the right type could be a target. For virtual
+/// function pointer through a vtable, we can do much better than that. This
+/// file build a map of virtual call sites to all of the possible trait
+/// implementations that match that method and trait. We then can write out
+/// this information to CBMC as function restrictions, improving verification
+/// performance.
+
+/// CBMC function restriction information: 
+///     http://cprover.diffblue.com/md__home_travis_build_diffblue_cbmc_doc_architectural_restrict-function-pointer.html
+
+
 use rustc_data_structures::stable_map::FxHashMap;
 
 /// Index into a vtable
@@ -8,6 +20,7 @@ type VtableIdx = usize;
 
 /// CBMC refers to call sites by index of use of function pointer in the
 /// surrounding function
+#[derive(Debug, Clone)]
 struct CallSite {
     trait_name: String,
     vtable_idx: VtableIdx,
@@ -35,10 +48,11 @@ impl VtableCtx {
     }
 }
 
-// Add data
+/// Add data
 impl VtableCtx {
+    /// Add a possible implementation for a virtual method call.
     pub fn add_possible_method(&mut self, trait_ty: String, method: usize, imp: String) {
-        let key = (trait_ty, method as VtableIdx);
+        let key = (dbg!(trait_ty), method as VtableIdx);
         if let Some(possibilities) = self.possible_methods.get_mut(&key) {
             possibilities.push(imp);
         } else {
@@ -46,10 +60,14 @@ impl VtableCtx {
         }
     }
 
+    /// Add a given call site for a virtual function, incremementing the call
+    /// site index.
     pub fn add_call_site(&mut self, trait_ty: String, method: usize, function_location: String) {
         let call_idx = if let Some(call_idx) = self.call_sites_map.get(&function_location) {
             *call_idx
         } else {
+            // CBMC index is 1-indexed:
+            // http://cprover.diffblue.com/md__home_travis_build_diffblue_cbmc_doc_architectural_restrict-function-pointer.html
             1
         };
         self.call_sites_map.insert(function_location.clone(), call_idx + 1);
@@ -63,9 +81,15 @@ impl VtableCtx {
     }
 }
 
-// Final data processing to write out for CBMC consumption
+/// Final data processing to write out for CBMC consumption
 impl VtableCtx {
     pub fn write_out_function_restrictions(&self) {
-        // TODO
+        for call_site in &self.call_sites {
+            dbg!(call_site);
+            let key = (call_site.trait_name.clone(), call_site.vtable_idx);
+            let possibilities = self.possible_methods.get(&key).unwrap();
+            assert!(possibilities.len() > 1);
+            dbg!(possibilities);
+        }
     }
 }
