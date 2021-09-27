@@ -18,7 +18,6 @@ use rustc_middle::ty::layout::LayoutOf;
 use rustc_middle::ty::print::with_no_trimmed_paths;
 use rustc_middle::ty::{self, Instance, InstanceDef, Ty, TyCtxt};
 use rustc_span::Span;
-use rustc_span::Symbol as RustSymbol;
 use std::rc::Rc;
 
 pub trait GotocTypeHook<'tcx> {

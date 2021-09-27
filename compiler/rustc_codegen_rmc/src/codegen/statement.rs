@@ -422,6 +422,11 @@ impl<'tcx> GotocCtx<'tcx> {
         loc: Location,
     ) -> Vec<Stmt> {
         let vtable_field_name = self.vtable_field_name(def_id, idx);
+        self.vtable_ctx.add_call_site(
+            trait_fat_ptr.typ().to_identifier(),
+            idx,
+            self.current_fn().name(),
+        );
 
         // Now that we have all the stuff we need, we can actually build the dynamic call
         // If the original call was of the form

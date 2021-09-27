@@ -701,6 +701,10 @@ impl<'tcx> GotocCtx<'tcx> {
 
         // Lookup in the symbol table using the full symbol table name/key
         let fn_name = self.symbol_name(instance);
+
+        // Add to the possible method names for this trait type
+        self.vtable_ctx.add_possible_method(self.normalized_trait_name(t), idx, fn_name.clone());
+
         if let Some(fn_symbol) = self.symbol_table.lookup(&fn_name) {
             // Create a pointer to the method
             // Note that the method takes a self* as the first argument, but the vtable field type has a void* as the first arg.
