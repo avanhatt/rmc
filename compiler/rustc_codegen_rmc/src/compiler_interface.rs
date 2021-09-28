@@ -119,8 +119,7 @@ impl CodegenBackend for GotocCodegenBackend {
             &tcx.sess.opts.debugging_opts.symbol_table_passes,
         );
 
-        // write out virtual function pointer restrictions
-        dbg!("AVH compiler interface?");
+        // Write out virtual function pointer restrictions
         c.vtable_ctx.write_out_function_restrictions();
 
         Box::new(GotocCodegenResult {

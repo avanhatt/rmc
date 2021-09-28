@@ -709,9 +709,39 @@ impl<'tcx> GotocCtx<'tcx> {
             // Create a pointer to the method
             // Note that the method takes a self* as the first argument, but the vtable field type has a void* as the first arg.
             // So we need to cast it at the end.
-            Expr::symbol_expression(fn_symbol.name.clone(), fn_symbol.typ.clone())
+
+            // STOPGAP: wrapper for function restriction
+            let wrapper_name = format!("{}_wrapper", fn_name);
+
+            let fn_type = field_type.clone().base_type().unwrap().clone();
+
+            dbg!(&fn_type);
+
+            let body = Expr::symbol_expression(fn_symbol.name.clone(), fn_symbol.typ.clone())
                 .address_of()
-                .cast_to(field_type)
+                .cast_to(fn_type.clone())
+                .as_stmt(Location::none());
+
+            // // Declare symbol for the single, self parameter
+            // let param_name = format!("{}::1::var{:?}", drop_sym_name, 0);
+            // let param_sym = Symbol::variable(
+            //     param_name.clone(),
+            //     param_name,
+            //     self.codegen_ty(trait_ty).to_pointer(),
+            //     Location::none(),
+            // );
+            // self.symbol_table.insert(param_sym.clone());
+
+            // Build and insert the function itself
+            let sym = Symbol::function(
+                &wrapper_name,
+                fn_type,
+                Some(Stmt::block(vec![body], Location::none())),
+                None,
+                Location::none(),
+            );
+            self.symbol_table.insert(sym.clone());
+            Expr::symbol_expression(wrapper_name, sym.typ)
         } else {
             warn!(
                 "Unable to find vtable symbol for virtual function {}, attempted lookup for symbol name: {}",
