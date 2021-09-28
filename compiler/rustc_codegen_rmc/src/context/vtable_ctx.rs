@@ -89,16 +89,13 @@ impl VtableCtx {
     //      ...
     // }
 
-    pub fn write_out_function_restrictions(&self) {
+    pub fn write_out_function_restrictions(&self, crate_name: String) {
         use std::io::Write;
 
         let mut output = btree_map![];
-        dbg!(&self.call_sites.len());
-
         for call_site in &self.call_sites {
             let key = (call_site.trait_name.clone(), call_site.vtable_idx);
             if let Some(possibilities) = self.possible_methods.get(&key) {
-                dbg!(possibilities.len());
                 let cbmc_call_site_name = format!(
                     "{}.function_pointer_call.{}",
                     call_site.function_location, call_site.call_idx
@@ -106,19 +103,19 @@ impl VtableCtx {
                 output.insert(
                     cbmc_call_site_name,
                     possibilities
-                        .iter()
-                        .map(|x| format!("(int (*)(void *)){}", x))
-                        .collect::<Vec<String>>()
+                        // .iter()
+                        // .map(|x| format!("(int (*)(void *)){}", x))
+                        // .collect::<Vec<String>>()
                         .to_json(),
                 );
-            } else {
-                dbg!(format!("no possibilities {:?}", call_site));
             }
         }
-        let _json_data = Json::Object(output);
-        // let pretty_json = json_data.pretty();
-        // let mut out_file = ::std::fs::File::create("restrictions").unwrap();
-        // write!(out_file, "{}", pretty_json.to_string()).unwrap();
-        // dbg!(json_data);
+
+        // TODO: condition on whether output is there
+        let json_data = Json::Object(output);
+        let pretty_json = json_data.pretty();
+        let filename = format!("{}_restrictions", crate_name);
+        let mut out_file = ::std::fs::File::create(filename).unwrap();
+        write!(out_file, "{}", pretty_json.to_string()).unwrap();
     }
 }

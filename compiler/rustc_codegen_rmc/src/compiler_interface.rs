@@ -59,6 +59,7 @@ impl CodegenBackend for GotocCodegenBackend {
 
         let codegen_units: &'tcx [CodegenUnit<'_>] = tcx.collect_and_partition_mono_items(()).1;
         let mut c = GotocCtx::new(tcx);
+        let full_crate_name = c.full_crate_name().to_string();
 
         // we first declare all functions
         for cgu in codegen_units {
@@ -120,7 +121,7 @@ impl CodegenBackend for GotocCodegenBackend {
         );
 
         // Write out virtual function pointer restrictions
-        c.vtable_ctx.write_out_function_restrictions();
+        c.vtable_ctx.write_out_function_restrictions(full_crate_name);
 
         Box::new(GotocCodegenResult {
             symtab: symbol_table,

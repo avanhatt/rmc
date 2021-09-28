@@ -702,46 +702,91 @@ impl<'tcx> GotocCtx<'tcx> {
         // Lookup in the symbol table using the full symbol table name/key
         let fn_name = self.symbol_name(instance);
 
-        // Add to the possible method names for this trait type
-        self.vtable_ctx.add_possible_method(self.normalized_trait_name(t), idx, fn_name.clone());
-
-        if let Some(fn_symbol) = self.symbol_table.lookup(&fn_name) {
+        if let Some(fn_symbol) = self.symbol_table.clone().lookup(&fn_name) {
             // Create a pointer to the method
             // Note that the method takes a self* as the first argument, but the vtable field type has a void* as the first arg.
             // So we need to cast it at the end.
 
+            if fn_symbol.typ.parameters().unwrap().len() < 1 {
+                return Expr::symbol_expression(fn_symbol.name.clone(), fn_symbol.typ.clone())
+                    .address_of()
+                    .cast_to(field_type);
+            }
+
             // STOPGAP: wrapper for function restriction
             let wrapper_name = format!("{}_wrapper", fn_name);
 
+            // Add to the possible method names for this trait type
+            self.vtable_ctx.add_possible_method(
+                self.normalized_trait_name(t),
+                idx,
+                wrapper_name.clone(),
+            );
+
             let fn_type = field_type.clone().base_type().unwrap().clone();
 
-            dbg!(&fn_type);
+            // let body = Expr::symbol_expression(fn_symbol.name.clone(), fn_symbol.typ.clone())
+            //     .address_of()
+            //     .cast_to(fn_type.clone())
+            //     .as_stmt(Location::none());
+            let parameters: Vec<Symbol> = fn_type
+                .parameters()
+                .unwrap()
+                .iter()
+                .enumerate()
+                .map(|(i, parameter)| {
+                    let name = format!("{}_{}", wrapper_name, i);
+                    let param = Symbol::variable(
+                        name.to_string(),
+                        name.to_string(),
+                        parameter.typ().clone(),
+                        Location::none(),
+                    );
+                    self.symbol_table.insert(param.clone());
+                    param
+                })
+                .collect();
 
-            let body = Expr::symbol_expression(fn_symbol.name.clone(), fn_symbol.typ.clone())
-                .address_of()
-                .cast_to(fn_type.clone())
-                .as_stmt(Location::none());
+            let ret_typ = fn_type.return_type().unwrap().clone();
+            let param_typs = parameters.clone().iter().map(|p| p.to_function_parameter()).collect();
+            let new_typ = if fn_type.is_code() {
+                Type::code(param_typs, ret_typ.clone())
+            } else {
+                Type::variadic_code(param_typs, ret_typ.clone())
+            };
 
-            // // Declare symbol for the single, self parameter
-            // let param_name = format!("{}::1::var{:?}", drop_sym_name, 0);
-            // let param_sym = Symbol::variable(
-            //     param_name.clone(),
-            //     param_name,
-            //     self.codegen_ty(trait_ty).to_pointer(),
-            //     Location::none(),
-            // );
-            // self.symbol_table.insert(param_sym.clone());
+            // Build the body: call the function
+            let body = fn_symbol
+                .clone()
+                .to_expr()
+                .call(
+                    parameters
+                        .iter()
+                        .enumerate()
+                        .map(|(i, p)| {
+                            let e = p.to_expr();
+                            if i == 0 {
+                                // Cast self param from void * to actual struct type
+                                e.cast_to(fn_symbol.typ.parameters().unwrap()[0].typ().clone())
+                            } else {
+                                e
+                            }
+                        })
+                        .collect(),
+                )
+                .ret(Location::none());
 
             // Build and insert the function itself
             let sym = Symbol::function(
                 &wrapper_name,
-                fn_type,
+                new_typ,
                 Some(Stmt::block(vec![body], Location::none())),
                 None,
                 Location::none(),
             );
             self.symbol_table.insert(sym.clone());
-            Expr::symbol_expression(wrapper_name, sym.typ)
+
+            sym.to_expr().address_of()
         } else {
             warn!(
                 "Unable to find vtable symbol for virtual function {}, attempted lookup for symbol name: {}",
