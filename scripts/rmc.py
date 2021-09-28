@@ -261,6 +261,8 @@ def run_cbmc_viewer(goto_filename, results_filename, coverage_filename, property
 # Handler for calling goto-instrument
 def run_goto_instrument(input_filename, output_filename, args, verbose=False, dry_run=False):
     cmd = ["goto-instrument"] + args + [input_filename, output_filename]
+    # + ["--function-pointer-restrictions-file", "restrictions"] 
+    print(cmd)
     return run_cmd(cmd, label="goto-instrument", verbose=verbose, dry_run=dry_run)
 
 # Generates a C program from a goto program
