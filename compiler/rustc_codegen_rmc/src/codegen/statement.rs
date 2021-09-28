@@ -3,7 +3,7 @@
 use super::typ::TypeExt;
 use super::typ::FN_RETURN_VOID_VAR_NAME;
 use crate::GotocCtx;
-use cbmc::goto_program::{BuiltinFn, Expr, Location, Stmt, Type};
+use cbmc::goto_program::{BuiltinFn, Expr, Location, Stmt, Symbol, Type};
 use rustc_hir::def_id::DefId;
 use rustc_middle::mir;
 use rustc_middle::mir::{
@@ -422,10 +422,21 @@ impl<'tcx> GotocCtx<'tcx> {
         loc: Location,
     ) -> Vec<Stmt> {
         let vtable_field_name = self.vtable_field_name(def_id, idx);
+
+        let full_crate_name = self.full_crate_name().to_string();
+        let wrapper_name = format!(
+            "restriction{}_{}",
+            full_crate_name,
+            self.vtable_ctx.get_call_site_global_idx()
+        )
+        .replace("::", "")
+        .replace(".", "")
+        .replace("$", "");
+
         self.vtable_ctx.add_call_site(
             trait_fat_ptr.typ().type_name().unwrap().replace("tag-", ""),
             idx,
-            self.current_fn().name(),
+            wrapper_name.clone(),
         );
 
         // Now that we have all the stuff we need, we can actually build the dynamic call
@@ -449,9 +460,57 @@ impl<'tcx> GotocCtx<'tcx> {
 
         // Virtual function call and corresponding nonnull assertion.
         let func_exp: Expr = fn_ptr.dereference();
+
+        // STOPGAP
+
+        let fn_type = func_exp.typ().clone();
+
+        let parameters: Vec<Symbol> = fn_type
+            .parameters()
+            .unwrap()
+            .iter()
+            .enumerate()
+            .map(|(i, parameter)| {
+                let name = format!("{}_{}", wrapper_name.clone(), i);
+                let param = Symbol::variable(
+                    name.to_string(),
+                    name.to_string(),
+                    parameter.typ().clone(),
+                    Location::none(),
+                );
+                self.symbol_table.insert(param.clone());
+                param
+            })
+            .collect();
+
+        let ret_typ = fn_type.return_type().unwrap().clone();
+        let param_typs = parameters.clone().iter().map(|p| p.to_function_parameter()).collect();
+        let new_typ = if fn_type.is_code() {
+            Type::code(param_typs, ret_typ.clone())
+        } else {
+            Type::variadic_code(param_typs, ret_typ.clone())
+        };
+
+        // Build the body: call the function
+
+        let body = func_exp
+            .clone()
+            .call(parameters.iter().map(|p| p.to_expr()).collect())
+            .ret(Location::none());
+
+        // Build and insert the function itself
+        let sym = Symbol::function(
+            &wrapper_name,
+            new_typ,
+            Some(Stmt::block(vec![body], Location::none())),
+            None,
+            Location::none(),
+        );
+        self.symbol_table.insert(sym.clone());
+
         vec![
             assert_nonnull,
-            self.codegen_expr_to_place(place, func_exp.call(fargs.to_vec()))
+            self.codegen_expr_to_place(place, sym.to_expr().call(fargs.to_vec()))
                 .with_location(loc.clone()),
         ]
     }

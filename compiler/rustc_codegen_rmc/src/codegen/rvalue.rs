@@ -714,7 +714,8 @@ impl<'tcx> GotocCtx<'tcx> {
             }
 
             // STOPGAP: wrapper for function restriction
-            let wrapper_name = format!("{}_wrapper", fn_name);
+            let wrapper_name =
+                format!("{}_wrapper", fn_name).replace("..", "").replace("::", "").replace("$", "");
 
             // Add to the possible method names for this trait type
             self.vtable_ctx.add_possible_method(
@@ -725,10 +726,6 @@ impl<'tcx> GotocCtx<'tcx> {
 
             let fn_type = field_type.clone().base_type().unwrap().clone();
 
-            // let body = Expr::symbol_expression(fn_symbol.name.clone(), fn_symbol.typ.clone())
-            //     .address_of()
-            //     .cast_to(fn_type.clone())
-            //     .as_stmt(Location::none());
             let parameters: Vec<Symbol> = fn_type
                 .parameters()
                 .unwrap()

@@ -35,6 +35,7 @@ pub struct VtableCtx {
     possible_methods: FxHashMap<(String, VtableIdx), Vec<String>>,
     call_sites_map: FxHashMap<String, usize>,
     call_sites: Vec<CallSite>,
+    call_site_global_idx: usize,
 }
 
 /// Constructor
@@ -44,6 +45,7 @@ impl VtableCtx {
             possible_methods: FxHashMap::default(),
             call_sites_map: FxHashMap::default(),
             call_sites: Vec::new(),
+            call_site_global_idx: 0,
         }
     }
 }
@@ -78,6 +80,11 @@ impl VtableCtx {
             call_idx: call_idx,
         };
         self.call_sites.push(site);
+    }
+
+    pub fn get_call_site_global_idx(&mut self) -> usize {
+        self.call_site_global_idx += 1;
+        self.call_site_global_idx
     }
 }
 
@@ -114,7 +121,7 @@ impl VtableCtx {
         // TODO: condition on whether output is there
         let json_data = Json::Object(output);
         let pretty_json = json_data.pretty();
-        let filename = format!("{}_restrictions", crate_name);
+        let filename = format!("{}_restrictions", crate_name).replace("::", "_");
         let mut out_file = ::std::fs::File::create(filename).unwrap();
         write!(out_file, "{}", pretty_json.to_string()).unwrap();
     }
