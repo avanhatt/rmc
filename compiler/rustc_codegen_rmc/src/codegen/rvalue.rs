@@ -808,9 +808,84 @@ impl<'tcx> GotocCtx<'tcx> {
         let trait_fn_ty = self.trait_vtable_drop_type(trait_ty);
 
         if let Some(drop_sym) = self.symbol_table.lookup(&drop_sym_name) {
-            Expr::symbol_expression(drop_sym_name, drop_sym.clone().typ)
-                .address_of()
-                .cast_to(trait_fn_ty)
+            // Expr::symbol_expression(drop_sym_name, drop_sym.clone().typ)
+            //     .address_of()
+            //     .cast_to(trait_fn_ty)
+            let drop_sym = drop_sym.clone();
+
+            // STOPGAP: wrapper for function restriction
+            let wrapper_name = format!("{}_wrapper", drop_sym_name)
+                .replace("..", "")
+                .replace("::", "")
+                .replace("$", "");
+
+            // Add to the possible method names for this trait type
+            self.vtable_ctx.add_possible_method(
+                self.normalized_trait_name(trait_ty),
+                2,
+                wrapper_name.clone(),
+            );
+
+            let fn_type = trait_fn_ty.clone().base_type().unwrap().clone();
+
+            let parameters: Vec<Symbol> = fn_type
+                .parameters()
+                .unwrap()
+                .iter()
+                .enumerate()
+                .map(|(i, parameter)| {
+                    let name = format!("{}_{}", wrapper_name, i);
+                    let param = Symbol::variable(
+                        name.to_string(),
+                        name.to_string(),
+                        parameter.typ().clone(),
+                        Location::none(),
+                    );
+                    self.symbol_table.insert(param.clone());
+                    param
+                })
+                .collect();
+
+            let ret_typ = fn_type.return_type().unwrap().clone();
+            let param_typs = parameters.clone().iter().map(|p| p.to_function_parameter()).collect();
+            let new_typ = if fn_type.is_code() {
+                Type::code(param_typs, ret_typ.clone())
+            } else {
+                Type::variadic_code(param_typs, ret_typ.clone())
+            };
+
+            // Build the body: call the function
+            let body = drop_sym
+                .clone()
+                .to_expr()
+                .call(
+                    parameters
+                        .iter()
+                        .enumerate()
+                        .map(|(i, p)| {
+                            let e = p.to_expr();
+                            if i == 0 {
+                                // Cast self param from void * to actual struct type
+                                e.cast_to(drop_sym.typ.parameters().unwrap()[0].typ().clone())
+                            } else {
+                                e
+                            }
+                        })
+                        .collect(),
+                )
+                .ret(Location::none());
+
+            // Build and insert the function itself
+            let sym = Symbol::function(
+                &wrapper_name,
+                new_typ,
+                Some(Stmt::block(vec![body], Location::none())),
+                None,
+                Location::none(),
+            );
+            self.symbol_table.insert(sym.clone());
+
+            sym.to_expr().address_of()
         } else {
             // We skip an entire submodule of the standard library, so drop is missing
             // for it. Build and insert a function that just calls an unimplemented block
