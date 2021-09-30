@@ -139,8 +139,8 @@ impl<'tcx> GotocCtx<'tcx> {
                             // Pull the self argument off of the fat pointer's data pointer
                             let self_ref =
                                 trait_fat_ptr.to_owned().member("data", &self.symbol_table);
-                            let self_ref =
-                                self_ref.cast_to(trait_fat_ptr.typ().clone().to_pointer());
+                            // let self_ref =
+                            //     self_ref.cast_to(trait_fat_ptr.typ().clone().to_pointer());
 
                             let func_exp: Expr = fn_ptr.dereference();
                             func_exp.call(vec![self_ref]).as_stmt(Location::none())

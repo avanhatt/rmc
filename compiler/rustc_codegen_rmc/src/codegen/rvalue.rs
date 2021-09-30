@@ -143,13 +143,6 @@ impl<'tcx> GotocCtx<'tcx> {
         if self.use_slice_fat_pointer(place_mir_type) {
             slice_fat_ptr(result_goto_type, thin_pointer, metadata, &self.symbol_table)
         } else if self.use_vtable_fat_pointer(place_mir_type) {
-            self.vtable_ctx.copy_drop_possibilities(
-                dbg!(
-                    intermediate_fat_pointer.clone().typ().type_name().unwrap().replace("tag-", "")
-                ),
-                dbg!(result_goto_type.clone().type_name().unwrap().replace("tag-", "")),
-            );
-
             dynamic_fat_ptr(
                 result_goto_type,
                 thin_pointer.cast_to(Type::void_pointer()),
@@ -525,11 +518,6 @@ impl<'tcx> GotocCtx<'tcx> {
             unreachable!("fat pointer with neither vtable nor len. {:?} {:?}", src, dst_t);
         };
 
-        self.vtable_ctx.copy_drop_possibilities(
-            dbg!(src_goto_expr.clone().typ().type_name().unwrap().replace("tag-", "")),
-            dbg!(dst_goto_typ.type_name().unwrap().replace("tag-", "")),
-        );
-
         Expr::struct_expr(
             dst_goto_typ,
             btree_string_map![dst_data_field, dst_metadata_field],
@@ -838,9 +826,12 @@ impl<'tcx> GotocCtx<'tcx> {
             let drop_sym = drop_sym.clone();
 
             let trait_name = format!("{:?}", trait_ty);
-            if trait_name.contains("std::error::Error") {
+            if trait_name.contains("::Error") {
                 dbg!(&trait_name);
                 dbg!(&drop_sym_name);
+            } else {
+                let other_trait = trait_name;
+                dbg!(other_trait);
             }
 
             // STOPGAP: wrapper for function restriction
@@ -1127,11 +1118,6 @@ impl<'tcx> GotocCtx<'tcx> {
         let data = src_goto_expr.to_owned().member("data", &self.symbol_table);
         let vtable_name = self.vtable_name(dst_mir_dyn_ty);
         let vtable_ty = Type::struct_tag(&vtable_name).to_pointer();
-
-        self.vtable_ctx.copy_drop_possibilities(
-            dbg!(self.normalized_trait_name(src_mir_dyn_ty)),
-            dbg!(self.normalized_trait_name(dst_mir_dyn_ty)),
-        );
 
         let vtable = src_goto_expr.member("vtable", &self.symbol_table).cast_to(vtable_ty);
 

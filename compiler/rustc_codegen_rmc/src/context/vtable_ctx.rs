@@ -87,20 +87,23 @@ impl VtableCtx {
         self.call_site_global_idx
     }
 
-    pub fn copy_drop_possibilities(&mut self, original_trait_ty: String, new_trait_ty: String) {
-        let original_key = (original_trait_ty.clone(), 2 as VtableIdx);
-        let new_key = (new_trait_ty.clone(), 2 as VtableIdx);
-        let possibilities = self.possible_methods.get_mut(&original_key).map(|x| x.clone());
-        if let Some(possibilities) = possibilities {
-            let copy_drop = format!("good drop copy for {} {}", original_trait_ty, new_trait_ty);
-            dbg!(copy_drop);
-            dbg!(&possibilities);
-            self.possible_methods.insert(new_key, possibilities);
-        } else {
-            let copy_drop_bad = format!("no drop copy for {} {}", original_trait_ty, new_trait_ty);
-            dbg!(copy_drop_bad);
-        }
-    }
+    // pub fn copy_drop_possibilities(&mut self, original_trait_ty: String, new_trait_ty: String) {
+    //     let original_key = (original_trait_ty.clone(), 2 as VtableIdx);
+    //     let new_key = (new_trait_ty.clone(), 2 as VtableIdx);
+    //     let possibilities = self.possible_methods.get_mut(&original_key).map(|x| x.clone());
+    //     if let Some(possibilities) = possibilities {
+    //         let copy_drop = format!("good drop copy for {} {}", original_trait_ty, new_trait_ty);
+    //         dbg!(copy_drop);
+    //         dbg!(&possibilities);
+    //         self.possible_methods.insert(new_key, possibilities);
+    //     } else {
+    //         let copy_drop_bad = format!("no drop copy for {} {}", original_trait_ty, new_trait_ty);
+    //         dbg!(copy_drop_bad);
+    //     }
+    // }
+
+    // HACK: std::error::Error
+    pub fn error_hack(&mut self, original_trait_ty: String, new_trait_ty: String) {}
 }
 
 /// Final data processing to write out for CBMC consumption
