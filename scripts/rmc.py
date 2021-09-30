@@ -260,8 +260,8 @@ def run_cbmc_viewer(goto_filename, results_filename, coverage_filename, property
 
 # Handler for calling goto-instrument
 def run_goto_instrument(input_filename, output_filename, args, verbose=False, dry_run=False):
-    # cmd = ["goto-instrument"] + args + [input_filename, output_filename]
-    cmd = ["goto-instrument"] + args +  ["--function-pointer-restrictions-file", "43hwqdrop43fxwlu::main_restrictions"] + [input_filename, output_filename]
+    cmd = ["goto-instrument"] + args + [input_filename, output_filename]
+    # cmd = ["goto-instrument"] + args +  ["--function-pointer-restrictions-file", "43hwqdrop43fxwlu_main_restrictions"] + [input_filename, output_filename]
     print(cmd)
     return run_cmd(cmd, label="goto-instrument", verbose=verbose, dry_run=dry_run)
 

@@ -124,6 +124,11 @@ impl<'tcx> GotocCtx<'tcx> {
                                 2,
                                 self.current_fn().name().clone(),
                             );
+                            let drop_trait_name =
+                                trait_fat_ptr.typ().type_name().unwrap().replace("tag-", "");
+                            let drop_details =
+                                format!("{} {}", self.current_fn().name().clone(), drop_trait_name);
+                            dbg!(drop_details);
 
                             // Pull the function off of the fat pointer's vtable pointer
                             let vtable_ref =

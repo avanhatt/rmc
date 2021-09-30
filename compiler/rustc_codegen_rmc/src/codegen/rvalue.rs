@@ -133,9 +133,9 @@ impl<'tcx> GotocCtx<'tcx> {
 
         // The metadata in the resulting fat pointer comes from the intermediate fat pointer
         let metadata = if self.use_slice_fat_pointer(place_mir_type) {
-            intermediate_fat_pointer.member("len", &self.symbol_table)
+            intermediate_fat_pointer.clone().member("len", &self.symbol_table)
         } else if self.use_vtable_fat_pointer(place_mir_type) {
-            intermediate_fat_pointer.member("vtable", &self.symbol_table)
+            intermediate_fat_pointer.clone().member("vtable", &self.symbol_table)
         } else {
             unreachable!()
         };
@@ -143,6 +143,13 @@ impl<'tcx> GotocCtx<'tcx> {
         if self.use_slice_fat_pointer(place_mir_type) {
             slice_fat_ptr(result_goto_type, thin_pointer, metadata, &self.symbol_table)
         } else if self.use_vtable_fat_pointer(place_mir_type) {
+            self.vtable_ctx.copy_drop_possibilities(
+                dbg!(
+                    intermediate_fat_pointer.clone().typ().type_name().unwrap().replace("tag-", "")
+                ),
+                dbg!(result_goto_type.clone().type_name().unwrap().replace("tag-", "")),
+            );
+
             dynamic_fat_ptr(
                 result_goto_type,
                 thin_pointer.cast_to(Type::void_pointer()),
@@ -502,15 +509,27 @@ impl<'tcx> GotocCtx<'tcx> {
         {
             (
                 "vtable",
-                src_goto_expr.member("vtable", &self.symbol_table).cast_to(vtable_typ.clone()),
+                src_goto_expr
+                    .clone()
+                    .member("vtable", &self.symbol_table)
+                    .cast_to(vtable_typ.clone()),
             )
         } else if let Some(len_typ) =
             self.symbol_table.lookup_field_type_in_type(&dst_goto_typ, "len")
         {
-            ("len", src_goto_expr.member("len", &self.symbol_table).cast_to(len_typ.clone()))
+            (
+                "len",
+                src_goto_expr.clone().member("len", &self.symbol_table).cast_to(len_typ.clone()),
+            )
         } else {
             unreachable!("fat pointer with neither vtable nor len. {:?} {:?}", src, dst_t);
         };
+
+        self.vtable_ctx.copy_drop_possibilities(
+            dbg!(src_goto_expr.clone().typ().type_name().unwrap().replace("tag-", "")),
+            dbg!(dst_goto_typ.type_name().unwrap().replace("tag-", "")),
+        );
+
         Expr::struct_expr(
             dst_goto_typ,
             btree_string_map![dst_data_field, dst_metadata_field],
@@ -717,6 +736,11 @@ impl<'tcx> GotocCtx<'tcx> {
             let wrapper_name =
                 format!("{}_wrapper", fn_name).replace("..", "").replace("::", "").replace("$", "");
 
+            // The same drop can live in multiple vtables, we can share the wrapper
+            if let Some(wrapper_sym) = self.symbol_table.lookup(&wrapper_name) {
+                return wrapper_sym.to_expr().address_of();
+            }
+
             // Add to the possible method names for this trait type
             self.vtable_ctx.add_possible_method(
                 self.normalized_trait_name(t),
@@ -813,11 +837,24 @@ impl<'tcx> GotocCtx<'tcx> {
             //     .cast_to(trait_fn_ty)
             let drop_sym = drop_sym.clone();
 
+            let trait_name = format!("{:?}", trait_ty);
+            if trait_name.contains("std::error::Error") {
+                dbg!(&trait_name);
+                dbg!(&drop_sym_name);
+            }
+
             // STOPGAP: wrapper for function restriction
-            let wrapper_name = format!("{}_wrapper", drop_sym_name)
-                .replace("..", "")
-                .replace("::", "")
-                .replace("$", "");
+            let wrapper_name =
+                format!("{}_{}_drop_wrapper", drop_sym_name, self.normalized_trait_name(trait_ty))
+                    .replace("..", "")
+                    .replace("::", "")
+                    .replace("$", "");
+
+            // The same drop can live in multiple vtables, we can share the wrapper
+            if let Some(wrapper_sym) = self.symbol_table.lookup(&wrapper_name) {
+                return wrapper_sym.to_expr().address_of();
+            }
+            dbg!(&wrapper_name);
 
             // Add to the possible method names for this trait type
             self.vtable_ctx.add_possible_method(
@@ -835,6 +872,7 @@ impl<'tcx> GotocCtx<'tcx> {
                 .enumerate()
                 .map(|(i, parameter)| {
                     let name = format!("{}_{}", wrapper_name, i);
+                    dbg!(&name);
                     let param = Symbol::variable(
                         name.to_string(),
                         name.to_string(),
@@ -866,7 +904,13 @@ impl<'tcx> GotocCtx<'tcx> {
                             let e = p.to_expr();
                             if i == 0 {
                                 // Cast self param from void * to actual struct type
+                                // e.cast_to(
+                                //     trait_fn_ty.base_type().unwrap().parameters().unwrap()[0]
+                                //         .typ()
+                                //         .clone(),
+                                // )
                                 e.cast_to(drop_sym.typ.parameters().unwrap()[0].typ().clone())
+                                // e.cast_to(self.codegen_ty(trait_ty).to_pointer())
                             } else {
                                 e
                             }
@@ -1074,6 +1118,7 @@ impl<'tcx> GotocCtx<'tcx> {
         assert!(self.is_vtable_fat_pointer(src_mir_type));
         assert!(self.is_vtable_fat_pointer(dst_mir_type));
 
+        let src_mir_dyn_ty = pointee_type(src_mir_type).unwrap();
         let dst_mir_dyn_ty = pointee_type(dst_mir_type).unwrap();
 
         // Get the fat pointer data and vtable fields, and cast the type of
@@ -1082,6 +1127,11 @@ impl<'tcx> GotocCtx<'tcx> {
         let data = src_goto_expr.to_owned().member("data", &self.symbol_table);
         let vtable_name = self.vtable_name(dst_mir_dyn_ty);
         let vtable_ty = Type::struct_tag(&vtable_name).to_pointer();
+
+        self.vtable_ctx.copy_drop_possibilities(
+            dbg!(self.normalized_trait_name(src_mir_dyn_ty)),
+            dbg!(self.normalized_trait_name(dst_mir_dyn_ty)),
+        );
 
         let vtable = src_goto_expr.member("vtable", &self.symbol_table).cast_to(vtable_ty);
 
@@ -1218,7 +1268,7 @@ impl<'tcx> GotocCtx<'tcx> {
     fn cast_sized_pointer_to_trait_fat_pointer(
         &mut self,
         src_goto_expr: Expr,
-        _src_mir_type: Ty<'tcx>,
+        src_mir_type: Ty<'tcx>,
         dst_mir_type: Ty<'tcx>,
         src_pointee_type: Ty<'tcx>,
         dst_pointee_type: Ty<'tcx>,
@@ -1230,6 +1280,10 @@ impl<'tcx> GotocCtx<'tcx> {
             let dst_goto_type = self.codegen_ty(dst_mir_type);
             let vtable = self.codegen_vtable(concrete_type, trait_type);
             let vtable_expr = vtable.address_of();
+
+            let src_mir_dyn_ty = pointee_type(src_mir_type).unwrap();
+            let dst_mir_dyn_ty = pointee_type(dst_mir_type).unwrap();
+
             Some(dynamic_fat_ptr(dst_goto_type, dst_goto_expr, vtable_expr, &self.symbol_table))
         } else {
             None

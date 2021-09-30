@@ -20,7 +20,7 @@ type VtableIdx = usize;
 
 /// CBMC refers to call sites by index of use of function pointer in the
 /// surrounding function
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 struct CallSite {
     trait_name: String,
     vtable_idx: VtableIdx,
@@ -50,7 +50,7 @@ impl VtableCtx {
     }
 }
 
-/// Add data
+/// Add and get data
 impl VtableCtx {
     /// Add a possible implementation for a virtual method call.
     pub fn add_possible_method(&mut self, trait_ty: String, method: usize, imp: String) {
@@ -86,6 +86,21 @@ impl VtableCtx {
         self.call_site_global_idx += 1;
         self.call_site_global_idx
     }
+
+    pub fn copy_drop_possibilities(&mut self, original_trait_ty: String, new_trait_ty: String) {
+        let original_key = (original_trait_ty.clone(), 2 as VtableIdx);
+        let new_key = (new_trait_ty.clone(), 2 as VtableIdx);
+        let possibilities = self.possible_methods.get_mut(&original_key).map(|x| x.clone());
+        if let Some(possibilities) = possibilities {
+            let copy_drop = format!("good drop copy for {} {}", original_trait_ty, new_trait_ty);
+            dbg!(copy_drop);
+            dbg!(&possibilities);
+            self.possible_methods.insert(new_key, possibilities);
+        } else {
+            let copy_drop_bad = format!("no drop copy for {} {}", original_trait_ty, new_trait_ty);
+            dbg!(copy_drop_bad);
+        }
+    }
 }
 
 /// Final data processing to write out for CBMC consumption
@@ -102,26 +117,33 @@ impl VtableCtx {
         let mut output = btree_map![];
         for call_site in &self.call_sites {
             let key = (call_site.trait_name.clone(), call_site.vtable_idx);
+            let cbmc_call_site_name = format!(
+                "{}.function_pointer_call.{}",
+                call_site.function_location, call_site.call_idx
+            );
             if let Some(possibilities) = self.possible_methods.get(&key) {
-                let cbmc_call_site_name = format!(
-                    "{}.function_pointer_call.{}",
-                    call_site.function_location, call_site.call_idx
-                );
-                output.insert(
-                    cbmc_call_site_name,
-                    possibilities
-                        // .iter()
-                        // .map(|x| format!("(int (*)(void *)){}", x))
-                        // .collect::<Vec<String>>()
-                        .to_json(),
-                );
+                output.insert(cbmc_call_site_name, possibilities.to_json());
+            } else {
+                output.insert(cbmc_call_site_name, Vec::<String>::new().to_json());
+            }
+        }
+
+        for ((trait_ref, idx), _) in &self.possible_methods {
+            let key = (trait_ref, idx);
+            if !self.call_sites.iter().any(|call_site| {
+                (call_site.trait_name == *trait_ref) && (call_site.vtable_idx == *idx)
+            }) {
+                let key_not_found = key;
+                if *idx == 2 {
+                    dbg!(key_not_found);
+                }
             }
         }
 
         // TODO: condition on whether output is there
         let json_data = Json::Object(output);
         let pretty_json = json_data.pretty();
-        let filename = format!("{}_restrictions", crate_name).replace("::", "_");
+        let filename = format!("/tmp/{}_restrictions", crate_name).replace("::", "_");
         let mut out_file = ::std::fs::File::create(filename).unwrap();
         write!(out_file, "{}", pretty_json.to_string()).unwrap();
     }
