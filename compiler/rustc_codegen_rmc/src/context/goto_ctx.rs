@@ -15,6 +15,7 @@
 //! this structure as input.
 
 use super::current_fn::CurrentFnCtx;
+use super::vtable_ctx::VtableCtx;
 use crate::overrides::{type_and_fn_hooks, GotocHooks, GotocTypeHooks};
 use crate::utils::full_crate_name;
 use cbmc::goto_program::{DatatypeComponent, Expr, Location, Stmt, Symbol, SymbolTable, Type};
@@ -49,6 +50,8 @@ pub struct GotocCtx<'tcx> {
     pub global_var_count: u64,
     /// map a global allocation to a name in the symbol table
     pub alloc_map: FxHashMap<&'tcx Allocation, String>,
+    /// map (trait, method) pairs to possible implementations
+    pub vtable_ctx: VtableCtx,
     pub current_fn: Option<CurrentFnCtx<'tcx>>,
 }
 
@@ -66,6 +69,7 @@ impl<'tcx> GotocCtx<'tcx> {
             full_crate_name: full_crate_name(tcx),
             global_var_count: 0,
             alloc_map: FxHashMap::default(),
+            vtable_ctx: VtableCtx::new(false),
             current_fn: None,
         }
     }
