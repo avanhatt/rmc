@@ -158,6 +158,15 @@ impl CodegenBackend for GotocCodegenBackend {
         let mut out_file = ::std::fs::File::create(output_name).unwrap();
         write!(out_file, "{}", pretty_json.to_string()).unwrap();
 
+        // AVH TODO
+        if true {
+            let rest_output_name =
+                outputs.path(OutputType::Object).with_extension("fn_ptr_restrictions");
+            debug!("outputting function pointer restrictions to {:?}", rest_output_name);
+            let mut rest_file = ::std::fs::File::create(rest_output_name).unwrap();
+            write!(rest_file, "{}", pretty_json.to_string()).unwrap();
+        }
+
         Ok(())
     }
 }

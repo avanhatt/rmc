@@ -13,35 +13,45 @@ use cbmc::btree_map;
 /// CBMC function restriction information:
 ///     http://cprover.diffblue.com/md__home_travis_build_diffblue_cbmc_doc_architectural_restrict-function-pointer.html
 use rustc_data_structures::stable_map::FxHashMap;
+use rustc_middle::ty::Ty;
 use rustc_serialize::json::*;
 
-/// Index into a vtable
-type VtableIdx = usize;
+/// This structure represents data about the vtable that we construct
+/// Per trait, per method, which functions could it map to?
+pub struct VtableCtx {
+    pub restrict_vtable_fn_ptrs: bool,
+    // Map: (normalized trait name, method index) -> possible implementations
+    // TODO: make trait + method a type
+    // TODO: value could be a ref to the symbol, Strings not great
+    // TODO: file a bug so that the restriction API for CBMC also takes labels
+    possible_methods: FxHashMap<(String, usize), Vec<String>>,
+    call_sites: Vec<CallSite>,
+    call_sites_map: FxHashMap<String, usize>, // this can die
+    call_site_global_idx: usize,
+}
+
+/// Trait-defined method: the trait type and the vtable index of the method.
+#[derive(Debug, Clone, PartialEq)]
+struct TraitDefinedMethod<'tcx> {
+    trait_type: Ty<'tcx>,
+    vtable_idx: usize,
+}
 
 /// CBMC refers to call sites by index of use of function pointer in the
 /// surrounding function
 #[derive(Debug, Clone, PartialEq)]
 struct CallSite {
     trait_name: String,
-    vtable_idx: VtableIdx,
+    vtable_idx: usize,
     function_location: String,
     call_idx: usize,
 }
 
-/// This structure represents data about the vtable that we construct
-/// Per trait, per method, which functions could it map to?
-pub struct VtableCtx {
-    // Map: (normalized trait name, method index) -> possible implementations
-    possible_methods: FxHashMap<(String, VtableIdx), Vec<String>>,
-    call_sites_map: FxHashMap<String, usize>,
-    call_sites: Vec<CallSite>,
-    call_site_global_idx: usize,
-}
-
 /// Constructor
 impl VtableCtx {
-    pub fn new() -> Self {
+    pub fn new(restrict_ptrs: bool) -> Self {
         Self {
+            restrict_vtable_fn_ptrs: restrict_ptrs,
             possible_methods: FxHashMap::default(),
             call_sites_map: FxHashMap::default(),
             call_sites: Vec::new(),
@@ -50,11 +60,14 @@ impl VtableCtx {
     }
 }
 
+// dyn Error + Sync + Send
+
 /// Add and get data
 impl VtableCtx {
     /// Add a possible implementation for a virtual method call.
     pub fn add_possible_method(&mut self, trait_ty: String, method: usize, imp: String) {
-        let key = (trait_ty, method as VtableIdx);
+        assert!(self.restrict_vtable_fn_ptrs);
+        let key = (trait_ty, method);
         if let Some(possibilities) = self.possible_methods.get_mut(&key) {
             possibilities.push(imp);
         } else {
@@ -65,6 +78,7 @@ impl VtableCtx {
     /// Add a given call site for a virtual function, incremementing the call
     /// site index.
     pub fn add_call_site(&mut self, trait_ty: String, method: usize, function_location: String) {
+        assert!(self.restrict_vtable_fn_ptrs);
         let call_idx = if let Some(call_idx) = self.call_sites_map.get(&function_location) {
             *call_idx
         } else {
@@ -75,7 +89,7 @@ impl VtableCtx {
         self.call_sites_map.insert(function_location.clone(), call_idx + 1);
         let site = CallSite {
             trait_name: trait_ty,
-            vtable_idx: method as VtableIdx,
+            vtable_idx: method,
             function_location: function_location,
             call_idx: call_idx,
         };
@@ -83,6 +97,7 @@ impl VtableCtx {
     }
 
     pub fn get_call_site_global_idx(&mut self) -> usize {
+        assert!(self.restrict_vtable_fn_ptrs);
         self.call_site_global_idx += 1;
         self.call_site_global_idx
     }
@@ -101,9 +116,6 @@ impl VtableCtx {
     //         dbg!(copy_drop_bad);
     //     }
     // }
-
-    // HACK: std::error::Error
-    pub fn error_hack(&mut self, original_trait_ty: String, new_trait_ty: String) {}
 }
 
 /// Final data processing to write out for CBMC consumption
@@ -113,8 +125,9 @@ impl VtableCtx {
     //     "function_call_site_name": ["function1", "function2", ...],
     //      ...
     // }
-
+    // TODO: return json to be used by link
     pub fn write_out_function_restrictions(&self, crate_name: String) {
+        assert!(self.restrict_vtable_fn_ptrs);
         use std::io::Write;
 
         let mut output = btree_map![];
@@ -136,10 +149,7 @@ impl VtableCtx {
             if !self.call_sites.iter().any(|call_site| {
                 (call_site.trait_name == *trait_ref) && (call_site.vtable_idx == *idx)
             }) {
-                let key_not_found = key;
-                if *idx == 2 {
-                    dbg!(key_not_found);
-                }
+                // AVH TODO debug
             }
         }
 

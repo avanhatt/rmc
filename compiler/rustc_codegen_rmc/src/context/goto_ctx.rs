@@ -69,7 +69,7 @@ impl<'tcx> GotocCtx<'tcx> {
             full_crate_name: full_crate_name(tcx),
             global_var_count: 0,
             alloc_map: FxHashMap::default(),
-            vtable_ctx: VtableCtx::new(),
+            vtable_ctx: VtableCtx::new(true), // AVH TODO
             current_fn: None,
         }
     }

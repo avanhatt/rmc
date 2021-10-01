@@ -128,7 +128,7 @@ impl<'tcx> GotocCtx<'tcx> {
                                 trait_fat_ptr.typ().type_name().unwrap().replace("tag-", "");
                             let drop_details =
                                 format!("{} {}", self.current_fn().name().clone(), drop_trait_name);
-                            dbg!(drop_details);
+                            // dbg!(drop_details);
 
                             // Pull the function off of the fat pointer's vtable pointer
                             let vtable_ref =
@@ -439,10 +439,7 @@ impl<'tcx> GotocCtx<'tcx> {
             "restriction{}_{}",
             full_crate_name,
             self.vtable_ctx.get_call_site_global_idx()
-        )
-        .replace("::", "")
-        .replace(".", "")
-        .replace("$", "");
+        );
 
         self.vtable_ctx.add_call_site(
             trait_fat_ptr.typ().type_name().unwrap().replace("tag-", ""),
