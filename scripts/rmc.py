@@ -138,7 +138,7 @@ def run_cmd(cmd, label=None, cwd=None, env=None, output_to=None, quiet=False, ve
     return process.returncode
 
 # Generates a symbol table from a rust file
-def compile_single_rust_file(input_filename, output_filename, verbose=False, debug=False, keep_temps=False, mangler="v0", dry_run=False, use_abs=False, abs_type="std", symbol_table_passes=[]):
+def compile_single_rust_file(input_filename, output_filename, verbose=False, debug=False, keep_temps=False, mangler="v0", dry_run=False, use_abs=False, abs_type="std", symbol_table_passes=[], restrict_vtable=False):
     if not keep_temps:
         atexit.register(delete_file, output_filename)
 
@@ -155,6 +155,9 @@ def compile_single_rust_file(input_filename, output_filename, verbose=False, deb
         build_cmd += ["-Z", "force-unstable-if-unmarked=yes",
                 "--cfg=use_abs",
                 "--cfg", f'abs_type="{abs_type}"']
+
+    if restrict_vtable:
+        build_cmd += ["-Z", "restrict_vtable_fn_ptrs"]
 
     build_cmd += ["-o", output_filename, input_filename]
 
@@ -177,6 +180,10 @@ def cargo_build(crate, target_dir, verbose=False, debug=False, mangler="v0", dry
         "-Z", f"symbol_table_passes={' '.join(symbol_table_passes)}",
         "-Z", "human_readable_cgu_names",
         f"--cfg={RMC_CFG}"]
+
+    if restrict_vtable:
+        rustflags += ["-Z", "restrict_vtable_fn_ptrs"]
+
     rustflags = " ".join(rustflags)
     if "RUSTFLAGS" in os.environ:
         rustflags = os.environ["RUSTFLAGS"] + " " + rustflags
@@ -262,13 +269,16 @@ def run_cbmc_viewer(goto_filename, results_filename, coverage_filename, property
     return run_cmd(cmd, label="cbmc-viewer", verbose=verbose, quiet=quiet, dry_run=dry_run)
 
 # Handler for calling goto-instrument
-def run_goto_instrument(input_filename, output_filename, args, verbose=False, dry_run=False):
+def run_goto_instrument(input_filename, output_filename, args, verbose=False, dry_run=False, restrict_vtable=False):
     cmd = ["goto-instrument"] + args + [input_filename, output_filename]
     return run_cmd(cmd, label="goto-instrument", verbose=verbose, dry_run=dry_run)
 
 # Generates a C program from a goto program
-def goto_to_c(goto_filename, c_filename, verbose=False, dry_run=False):
-    return run_goto_instrument(goto_filename, c_filename, ["--dump-c"], verbose, dry_run=dry_run)
+def goto_to_c(goto_filename, c_filename, restrictions_filename,  verbose=False, dry_run=False, restrict_vtable=False):
+    args = ["--dump-c"]
+    if restrict_vtable:
+        args += ["--function-pointer-restrictions-file", restrictions_filename]
+    return run_goto_instrument(goto_filename, c_filename, args, verbose, dry_run=dry_run, restrict_vtable=restrict_vtable)
 
 # Fix remaining issues with output of --gen-c-runnable
 def gen_c_postprocess(c_filename, dry_run=False):

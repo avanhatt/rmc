@@ -31,6 +31,7 @@ def main():
 
         cbmc_runnable_filename = os.path.join(args.target_dir, "cbmc_runnable.out")
         c_runnable_filename = os.path.join(args.target_dir, "cbmc_runnable.c")
+        restrictions_runnable_filename = os.path.join(args.target_dir, "cbmc_runnable.fn_ptr_restrictions")
 
         if EXIT_CODE_SUCCESS != rmc.symbol_table_to_gotoc(jsons[0], cbmc_runnable_filename, args.verbose, args.keep_temps, args.dry_run):
             return 1
@@ -38,7 +39,7 @@ def main():
         if EXIT_CODE_SUCCESS != rmc.link_c_lib(cbmc_runnable_filename, cbmc_runnable_filename, args.c_lib, args.verbose, args.quiet, args.function, args.dry_run):
             return 1
 
-        if EXIT_CODE_SUCCESS != rmc.goto_to_c(cbmc_runnable_filename, c_runnable_filename, args.verbose, args.dry_run):
+        if EXIT_CODE_SUCCESS != rmc.goto_to_c(cbmc_runnable_filename, c_runnable_filename, restrictions_runnable_filename, args.verbose, args.dry_run):
             return 1
 
         rmc.gen_c_postprocess(c_runnable_filename, args.dry_run)

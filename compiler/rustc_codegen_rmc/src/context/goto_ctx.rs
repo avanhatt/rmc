@@ -61,6 +61,7 @@ impl<'tcx> GotocCtx<'tcx> {
         let (thks, fhks) = type_and_fn_hooks();
         let mm = machine_model_from_session(tcx.sess);
         let symbol_table = SymbolTable::new(mm);
+        let restrict_vtable_fn_ptrs = tcx.sess.opts.debugging_opts.restrict_vtable_fn_ptrs;
         GotocCtx {
             tcx,
             symbol_table,
@@ -69,7 +70,7 @@ impl<'tcx> GotocCtx<'tcx> {
             full_crate_name: full_crate_name(tcx),
             global_var_count: 0,
             alloc_map: FxHashMap::default(),
-            vtable_ctx: VtableCtx::new(false),
+            vtable_ctx: VtableCtx::new(restrict_vtable_fn_ptrs),
             current_fn: None,
         }
     }

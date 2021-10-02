@@ -522,7 +522,6 @@ impl<'tcx> GotocCtx<'tcx> {
         } else {
             unreachable!("fat pointer with neither vtable nor len. {:?} {:?}", src, dst_t);
         };
-
         Expr::struct_expr(
             dst_goto_typ,
             btree_string_map![dst_data_field, dst_metadata_field],
@@ -1110,7 +1109,6 @@ impl<'tcx> GotocCtx<'tcx> {
             let dst_goto_type = self.codegen_ty(dst_mir_type);
             let vtable = self.codegen_vtable(concrete_type, trait_type);
             let vtable_expr = vtable.address_of();
-
             Some(dynamic_fat_ptr(dst_goto_type, dst_goto_expr, vtable_expr, &self.symbol_table))
         } else {
             None

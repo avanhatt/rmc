@@ -169,12 +169,12 @@ impl CodegenBackend for GotocCodegenBackend {
 
         // If they exist, write out vtable virtual call function pointer restrictions
         if let Some(restrictions) = result.vtable_restrictions {
-            let pretty_json = restrictions.pretty();
+            let pretty_json_rest = restrictions.pretty();
             let rest_output_name =
                 outputs.path(OutputType::Object).with_extension("fn_ptr_restrictions");
             debug!("outputting function pointer restrictions to {:?}", rest_output_name);
             let mut rest_file = ::std::fs::File::create(rest_output_name).unwrap();
-            write!(rest_file, "{}", pretty_json.to_string()).unwrap();
+            write!(rest_file, "{}", pretty_json_rest.to_string()).unwrap();
         }
 
         Ok(())

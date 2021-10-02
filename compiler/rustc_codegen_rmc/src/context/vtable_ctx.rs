@@ -16,12 +16,15 @@ use crate::GotocCtx;
 use cbmc::btree_map;
 use cbmc::goto_program::{Expr, Location, Stmt, Symbol, Type};
 use rustc_data_structures::stable_map::FxHashMap;
+use tracing::debug;
 
 /// This structure represents data about the vtable that we construct
 /// Per trait, per method, which functions could virtual call sites
 /// possibly refer to?
 pub struct VtableCtx {
+    // Option to actually enable restrictions
     pub restrict_vtable_fn_ptrs: bool,
+
     // Map: (normalized trait name, method index) -> possible implementations
     possible_methods: FxHashMap<TraitDefinedMethod, Vec<String>>,
 
@@ -51,6 +54,7 @@ struct CallSite {
 /// Constructor
 impl VtableCtx {
     pub fn new(restrict_ptrs: bool) -> Self {
+        debug!("Restricting vtable function pointers? {:?}", restrict_ptrs);
         Self {
             restrict_vtable_fn_ptrs: restrict_ptrs,
             possible_methods: FxHashMap::default(),
@@ -60,7 +64,7 @@ impl VtableCtx {
     }
 }
 
-/// Add and get data
+/// Interface for codegen to add possible methods
 impl VtableCtx {
     /// Add a possible implementation for a virtual method call.
     pub fn add_possible_method(&mut self, trait_name: String, method: usize, imp: String) {
@@ -73,6 +77,20 @@ impl VtableCtx {
         }
     }
 
+    /// The vtable index for drop is 2
+    pub fn drop_index() -> usize {
+        2
+    }
+}
+
+/// Internal tracking helpers
+impl VtableCtx {
+    fn get_call_site_global_idx(&mut self) -> usize {
+        assert!(self.restrict_vtable_fn_ptrs);
+        self.call_site_global_idx += 1;
+        self.call_site_global_idx
+    }
+
     /// Add a given call site for a virtual function, incremementing the call
     /// site index.
     fn add_call_site(&mut self, trait_name: String, method: usize, function_location: String) {
@@ -82,17 +100,6 @@ impl VtableCtx {
             function_location: function_location,
         };
         self.call_sites.push(site);
-    }
-
-    pub fn get_call_site_global_idx(&mut self) -> usize {
-        assert!(self.restrict_vtable_fn_ptrs);
-        self.call_site_global_idx += 1;
-        self.call_site_global_idx
-    }
-
-    /// The vtable index for drop is 2
-    pub fn drop_index() -> usize {
-        2
     }
 }
 
@@ -124,11 +131,14 @@ impl<'tcx> GotocCtx<'tcx> {
             self.vtable_ctx.get_call_site_global_idx()
         );
 
+        // We only have the Gotoc type, we need to normalize to match the MIR type.
+        assert!(trait_ty.is_struct_tag());
         let normalized_trait_name = trait_ty.type_name().unwrap().replace("tag-", "");
         self.vtable_ctx.add_call_site(normalized_trait_name, vtable_idx, wrapper_name.clone());
 
         // Declare the wrapper's parameters
-        let fn_type = fn_ptr.typ().clone();
+        let func_exp: Expr = fn_ptr.dereference();
+        let fn_type = func_exp.typ().clone();
         let parameters: Vec<Symbol> = fn_type
             .parameters()
             .unwrap()
@@ -157,7 +167,7 @@ impl<'tcx> GotocCtx<'tcx> {
         };
 
         // Build the body: call the original function pointer
-        let body = fn_ptr
+        let body = func_exp
             .clone()
             .call(parameters.iter().map(|p| p.to_expr()).collect())
             .ret(Location::none());
