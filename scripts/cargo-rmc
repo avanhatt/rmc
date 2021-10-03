@@ -23,7 +23,7 @@ def main():
 
     if args.gen_c_runnable:
         rmc.cargo_build(args.crate, args.target_dir,
-                        args.verbose, args.debug, args.mangler, args.dry_run, ["gen-c"])
+                        args.verbose, args.debug, args.mangler, args.dry_run, ["gen-c"], args.restrict_vtable)
 
         pattern = os.path.join(args.target_dir, "debug", "deps", "*.json")
         jsons = glob.glob(pattern)
@@ -45,7 +45,7 @@ def main():
         rmc.gen_c_postprocess(c_runnable_filename, args.dry_run)
 
     rmc.cargo_build(args.crate, args.target_dir,
-                    args.verbose, args.debug, args.mangler, args.dry_run, [])
+                    args.verbose, args.debug, args.mangler, args.dry_run, [], args.restrict_vtable)
 
     pattern = os.path.join(args.target_dir, "debug", "deps", "*.json")
     jsons = glob.glob(pattern)

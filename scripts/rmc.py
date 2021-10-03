@@ -170,7 +170,7 @@ def compile_single_rust_file(input_filename, output_filename, verbose=False, deb
     return run_cmd(build_cmd, env=build_env, label="compile", verbose=verbose, debug=debug, dry_run=dry_run)
 
 # Generates a symbol table (and some other artifacts) from a rust crate
-def cargo_build(crate, target_dir, verbose=False, debug=False, mangler="v0", dry_run=False, symbol_table_passes=[]):
+def cargo_build(crate, target_dir, verbose=False, debug=False, mangler="v0", dry_run=False, symbol_table_passes=[], restrict_vtable=False):
     ensure(os.path.isdir(crate), f"Invalid path to crate: {crate}")
 
     rustflags = [
