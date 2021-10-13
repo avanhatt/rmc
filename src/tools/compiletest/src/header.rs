@@ -165,7 +165,7 @@ impl TestProps {
         TestProps {
             error_patterns: vec![],
             compile_flags: vec![],
-            rmc_flags: vec![],
+            rmc_flags: vec!["--restrict-vtable".to_string()],
             cbmc_flags: vec![],
             run_flags: None,
             pp_exact: None,
