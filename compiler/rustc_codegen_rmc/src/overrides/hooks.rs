@@ -523,6 +523,7 @@ impl<'tcx> GotocHook<'tcx> for RustDealloc {
                     ],
                     loc,
                 )
+                // Stmt::skip(loc)
             }
             _ => unreachable!(),
         }

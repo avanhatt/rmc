@@ -761,6 +761,12 @@ impl<'tcx> GotocCtx<'tcx> {
         let trait_fn_ty = self.trait_vtable_drop_type(trait_ty);
 
         if let Some(drop_sym) = self.symbol_table.lookup(&drop_sym_name) {
+            // let trait_ty_name = format!("{:?}", trait_ty);
+            // // if trait_ty_name.contains("Error") {
+            //     let stmt = format!("{:?} : {:?}", trait_ty, drop_sym_name.clone());
+            //     dbg!(stmt);
+            // }
+
             if self.vtable_ctx.restrict_vtable_fn_ptrs {
                 // Add to the possible method names for this trait type
                 self.vtable_ctx.add_possible_method(
@@ -778,6 +784,9 @@ impl<'tcx> GotocCtx<'tcx> {
             // for it. Build and insert a function that just calls an unimplemented block
             // to maintain soundness.
             let drop_sym_name = format!("{}_unimplemented", self.symbol_name(drop_instance));
+            if let Some(fn_symbol) = self.symbol_table.clone().lookup(&drop_sym_name) {
+                return fn_symbol.to_expr();
+            }
 
             // Function body
             let unimplemented = self

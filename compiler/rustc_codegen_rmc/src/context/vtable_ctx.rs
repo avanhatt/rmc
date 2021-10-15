@@ -18,6 +18,8 @@ use cbmc::goto_program::{Expr, Location, Stmt, Symbol, Type};
 use rustc_data_structures::stable_map::FxHashMap;
 use tracing::debug;
 
+use rustc_serialize::json::*;
+
 /// This structure represents data about the vtable that we construct
 /// Per trait, per method, which functions could virtual call sites
 /// possibly refer to?
@@ -43,12 +45,32 @@ struct TraitDefinedMethod {
     vtable_idx: usize,
 }
 
+impl ToJson for TraitDefinedMethod {
+    fn to_json(&self) -> Json {
+        let mut output = btree_map![
+            ("trait_name".to_string(), self.trait_name.to_json()),
+            ("vtable_idx".to_string(), self.vtable_idx.to_json()),
+        ];
+        Json::Object(output)
+    }
+}
+
 /// CBMC refers to call sites by index of use of function pointer in the
 /// surrounding function
 #[derive(Debug, Clone, PartialEq)]
 struct CallSite {
     trait_method: TraitDefinedMethod,
     function_location: String,
+}
+
+impl ToJson for CallSite {
+    fn to_json(&self) -> Json {
+        let mut output = btree_map![
+            ("trait_method".to_string(), self.trait_method.to_json()),
+            ("function_location".to_string(), self.function_location.to_json()),
+        ];
+        Json::Object(output)
+    }
 }
 
 /// Constructor
@@ -69,7 +91,18 @@ impl VtableCtx {
     /// Add a possible implementation for a virtual method call.
     pub fn add_possible_method(&mut self, trait_name: String, method: usize, imp: String) {
         assert!(self.restrict_vtable_fn_ptrs);
-        let key = TraitDefinedMethod { trait_name: trait_name, vtable_idx: method };
+        let key = TraitDefinedMethod { trait_name: trait_name.clone(), vtable_idx: method };
+
+        if method == 2 {
+            let drop = format!("{} {}", trait_name.clone(), imp.clone());
+            dbg!(drop);
+        }
+
+        if method == 7 {
+            let seven = format!("{} {}", trait_name.clone(), imp.clone());
+            dbg!(seven);
+        }
+
         if let Some(possibilities) = self.possible_methods.get_mut(&key) {
             possibilities.push(imp);
         } else {
@@ -134,7 +167,15 @@ impl<'tcx> GotocCtx<'tcx> {
         // We only have the Gotoc type, we need to normalize to match the MIR type.
         assert!(trait_ty.is_struct_tag());
         let normalized_trait_name = trait_ty.type_name().unwrap().replace("tag-", "");
-        self.vtable_ctx.add_call_site(normalized_trait_name, vtable_idx, wrapper_name.clone());
+        self.vtable_ctx.add_call_site(
+            normalized_trait_name.clone(),
+            vtable_idx,
+            wrapper_name.clone(),
+        );
+
+        let call =
+            format!("{} {} {}", wrapper_name.clone(), normalized_trait_name.clone(), vtable_idx);
+        dbg!(call);
 
         // Declare the wrapper's parameters
         let func_exp: Expr = fn_ptr.dereference();
@@ -193,11 +234,24 @@ impl VtableCtx {
     ///      ...
     /// }
     pub fn get_virtual_function_restrictions(&self) -> rustc_serialize::json::Json {
-        use rustc_serialize::json::*;
-
         assert!(self.restrict_vtable_fn_ptrs);
 
         let mut output = btree_map![];
+
+        output.insert("call_sites".to_string(), self.call_sites.to_json());
+
+        let mut possible_methods = vec![];
+        for (trait_def, methods) in &self.possible_methods {
+            let value = btree_map![
+                ("trait_def".to_string(), trait_def.to_json()),
+                ("methods".to_string(), methods.to_json()),
+            ];
+            possible_methods.push(value);
+        }
+
+        output.insert("possible_methods".to_string(), possible_methods.to_json());
+
+        let mut single_crate = btree_map![];
         for call_site in &self.call_sites {
             // CBMC index is 1-indexed:
             // http://cprover.diffblue.com/md__home_travis_build_diffblue_cbmc_doc_architectural_restrict-function-pointer.html
@@ -206,11 +260,12 @@ impl VtableCtx {
 
             // Look up all possibilities, defaulting to the empty set
             if let Some(possibilities) = self.possible_methods.get(&call_site.trait_method) {
-                output.insert(cbmc_call_site_name, possibilities.to_json());
+                single_crate.insert(cbmc_call_site_name, possibilities.to_json());
             } else {
-                output.insert(cbmc_call_site_name, Vec::<String>::new().to_json());
+                single_crate.insert(cbmc_call_site_name, Vec::<String>::new().to_json());
             };
         }
+        output.insert("single_crate".to_string(), single_crate.to_json());
         Json::Object(output)
     }
 }

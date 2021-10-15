@@ -427,6 +427,7 @@ impl<'tcx> GotocCtx<'tcx> {
             // This hash is documented to be the same no matter the crate context
             let id_u64 = self.tcx.type_id_hash(t);
             format!("_{}", id_u64)
+            // format!("{}_{}", self.ty_pretty_name(t), id_u64)
         }
     }
 
