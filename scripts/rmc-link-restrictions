@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+
+from collections import defaultdict
+import json
+import os
+import sys
+
+def link_json(artifact_dir):
+    all_call_sites = []
+    all_possible_methods = defaultdict(list)
+    output = {}
+
+    for f in os.listdir(artifact_dir):
+        if f.endswith(".fn_ptr_restrictions_link"):
+            with open(os.path.join(artifact_dir, f)) as json_file:
+                crate_data = json.load(json_file) 
+                all_call_sites += crate_data["call_sites"]
+
+                for possibility in crate_data["possible_methods"]:
+                    trait_def = possibility["trait_def"]
+                    key = (trait_def["trait_name"], trait_def["vtable_idx"])
+                    methods = possibility["methods"]
+                    all_possible_methods[key] += methods
+
+    for site in all_call_sites:
+        name = "{}.function_pointer_call.1".format(site["function_location"])
+        trait_def = site["trait_method"]
+        key = (trait_def["trait_name"], trait_def["vtable_idx"])
+        if key in all_possible_methods:
+            output[name] = all_possible_methods[key]
+        else: 
+            output[name] = []
+
+    pretty_json = json.dumps(output, indent=2)
+    with open(os.path.join(artifact_dir, "restrictions.json"), "w") as json_file:
+        json_file.write(pretty_json)
+
+
+
+def main():
+    if len(sys.argv) != 2:
+        print("Error: wrong number of arguments, expected single path")
+        return 1
+
+    artifact_dir = sys.argv[1]
+    if not os.path.isdir(artifact_dir):
+        print("Error: artifact directory not found: {}", artifact_dir)
+        return 1
+
+    link_json(artifact_dir)    
+
+if __name__ == "__main__":
+    sys.exit(main())
