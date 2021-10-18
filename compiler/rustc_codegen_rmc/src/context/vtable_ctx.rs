@@ -93,16 +93,6 @@ impl VtableCtx {
         assert!(self.restrict_vtable_fn_ptrs);
         let key = TraitDefinedMethod { trait_name: trait_name.clone(), vtable_idx: method };
 
-        if method == 2 {
-            let drop = format!("{} {}", trait_name.clone(), imp.clone());
-            dbg!(drop);
-        }
-
-        if method == 7 {
-            let seven = format!("{} {}", trait_name.clone(), imp.clone());
-            dbg!(seven);
-        }
-
         if let Some(possibilities) = self.possible_methods.get_mut(&key) {
             possibilities.push(imp);
         } else {
@@ -175,7 +165,6 @@ impl<'tcx> GotocCtx<'tcx> {
 
         let call =
             format!("{} {} {}", wrapper_name.clone(), normalized_trait_name.clone(), vtable_idx);
-        dbg!(call);
 
         // Declare the wrapper's parameters
         let func_exp: Expr = fn_ptr.dereference();

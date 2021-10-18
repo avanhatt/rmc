@@ -90,26 +90,16 @@ impl<'tcx> GotocCtx<'tcx> {
     }
 
     pub fn print_instance(&self, instance: Instance<'_>, mir: &'tcx Body<'tcx>) {
-        if self.current_fn().name()
-            == "_ZN4core3ptr41drop_in_place$LT$std..io..error..Repr$GT$17h85dd49190497d691E"
-        {
-            // if cfg!(debug_assertions) {
-            // dbg!(
-            //     "handling {}, {}",
-            //     instance,
-            //     with_no_trimmed_paths(|| self.tcx.def_path_str(instance.def_id()))
-            // );
-            dbg!("variables: ");
-            for l in mir.args_iter().chain(mir.vars_and_temps_iter()) {
-                dbg!("let {:?}: {:?}", l, self.local_ty(l));
-            }
-            for (bb, bbd) in mir.basic_blocks().iter_enumerated() {
-                dbg!(&bb);
-                for stmt in &bbd.statements {
-                    dbg!(&stmt);
-                }
-                dbg!(&bbd.terminator().kind);
-            }
-        }
+        // dbg!("variables: ");
+        // for l in mir.args_iter().chain(mir.vars_and_temps_iter()) {
+        //     dbg!("let {:?}: {:?}", l, self.local_ty(l));
+        // }
+        // for (bb, bbd) in mir.basic_blocks().iter_enumerated() {
+        //     dbg!(&bb);
+        //     for stmt in &bbd.statements {
+        //         dbg!(&stmt);
+        //     }
+        //     dbg!(&bbd.terminator().kind);
+        // }
     }
 }

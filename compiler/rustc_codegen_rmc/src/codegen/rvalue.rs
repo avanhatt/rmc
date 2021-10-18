@@ -761,12 +761,6 @@ impl<'tcx> GotocCtx<'tcx> {
         let trait_fn_ty = self.trait_vtable_drop_type(trait_ty);
 
         if let Some(drop_sym) = self.symbol_table.lookup(&drop_sym_name) {
-            // let trait_ty_name = format!("{:?}", trait_ty);
-            // // if trait_ty_name.contains("Error") {
-            //     let stmt = format!("{:?} : {:?}", trait_ty, drop_sym_name.clone());
-            //     dbg!(stmt);
-            // }
-
             if self.vtable_ctx.restrict_vtable_fn_ptrs {
                 // Add to the possible method names for this trait type
                 self.vtable_ctx.add_possible_method(
