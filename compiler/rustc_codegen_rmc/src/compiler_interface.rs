@@ -16,7 +16,7 @@ use rustc_middle::dep_graph::{WorkProduct, WorkProductId};
 use rustc_middle::mir::mono::{CodegenUnit, MonoItem};
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, TyCtxt};
-use rustc_serialize::json::ToJson;
+use rustc_serialize::json::{Json, ToJson};
 use rustc_session::config::{OutputFilenames, OutputType};
 use rustc_session::cstore::MetadataLoaderDyn;
 use rustc_session::Session;
@@ -26,6 +26,7 @@ use tracing::{debug, warn};
 pub struct GotocCodegenResult {
     pub symtab: SymbolTable,
     pub crate_name: rustc_span::Symbol,
+    pub vtable_restrictions: Option<Json>,
 }
 
 #[derive(Clone)]
@@ -124,9 +125,17 @@ impl CodegenBackend for GotocCodegenBackend {
             &tcx.sess.opts.debugging_opts.symbol_table_passes,
         );
 
+        // Get the vtable function pointer restrictions if requested
+        let vtable_restrictions = if c.vtable_ctx.restrict_vtable_fn_ptrs {
+            Some(c.vtable_ctx.get_virtual_function_restrictions())
+        } else {
+            None
+        };
+
         Box::new(GotocCodegenResult {
             symtab: symbol_table,
             crate_name: tcx.crate_name(LOCAL_CRATE) as rustc_span::Symbol,
+            vtable_restrictions: vtable_restrictions,
         })
     }
 
@@ -158,6 +167,28 @@ impl CodegenBackend for GotocCodegenBackend {
         debug!("output to {:?}", output_name);
         let mut out_file = ::std::fs::File::create(output_name).unwrap();
         write!(out_file, "{}", pretty_json.to_string()).unwrap();
+
+        // If they exist, write out vtable virtual call function pointer restrictions
+        if let Some(restrictions) = result.vtable_restrictions {
+            // Write out single crate restrictions
+            let data = restrictions.as_object().unwrap();
+            let single_crate = data.get("single_crate").unwrap().pretty();
+
+            let single_crate_output_name =
+                outputs.path(OutputType::Object).with_extension("fn_ptr_restrictions");
+            debug!(
+                "outputting single crate function pointer restrictions to {:?}",
+                single_crate_output_name
+            );
+            let mut single_file = ::std::fs::File::create(single_crate_output_name).unwrap();
+            write!(single_file, "{}", single_crate.to_string()).unwrap();
+
+            let rest_output_name =
+                outputs.path(OutputType::Object).with_extension("fn_ptr_restrictions_link");
+            debug!("outputting function pointer restrictions link info to {:?}", rest_output_name);
+            let mut rest_file = ::std::fs::File::create(rest_output_name).unwrap();
+            write!(rest_file, "{}", restrictions.pretty().to_string()).unwrap();
+        }
 
         Ok(())
     }

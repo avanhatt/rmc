@@ -11,6 +11,11 @@ trait Animal {
     fn noise(&self) -> i32;
 }
 
+trait Other {
+    // Instance method signature
+    fn noise(&self) -> i32;
+}
+
 // Implement the `Animal` trait for `Sheep`.
 impl Animal for Sheep {
     fn noise(&self) -> i32 {
@@ -22,6 +27,12 @@ impl Animal for Sheep {
 impl Animal for Cow {
     fn noise(&self) -> i32 {
         2
+    }
+}
+
+impl Other for i32 {
+    fn noise(&self) -> i32 {
+        3
     }
 }
 
@@ -39,4 +50,7 @@ pub fn main() {
     } else {
         assert!(s == 2);
     }
+
+    let other = &5 as &dyn Other;
+    assert!(other.noise() == 3);
 }
