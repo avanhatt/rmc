@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    Pipeline src/test/dashboard/books/The Rust Reference/Statements and expressions/Expressions/Operator expressions/263.rs
+  </title>
+<style>
+#title{
+  background-color: #ec407a;
+  color: white;
+  padding: 2em;
+}
+h1 {
+  margin-bottom: 0em;
+}
+#subtitle {
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.2em;
+}
+.run-info ul {
+  list-style: none;
+}
+.run-info ul li {
+  display: inline;
+  margin-right: 6em;
+  margin-left: -3em;
+  text-transform: uppercase;
+  font-size: small;
+  color: #ec407a;
+}
+#content {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 2em;
+  color: #263238;
+  font-family: Helvetica, sans-serif;
+}
+p {
+  margin: 0;
+}
+.command-table {
+  background-color: #eceff1;
+  padding: 0.3em;
+  border-radius: 0.3em;
+  margin-bottom: 4em;
+}
+.command-table .fail-ignored {
+  background-color: #e65100cc;
+  padding: 0.3em;
+  border-radius: 0.3em;
+}
+.command-table .success {
+  background-color: #1a237ecc;
+  padding: 0.3em;
+  border-radius: 0.3em;
+}
+.command-table .in-progress {
+  background-color: #26323844;
+  padding: 0.3em;
+  border-radius: 0.3em;
+}
+.command-table .fail {
+  background-color: #f44336cc;
+  padding: 0.3em;
+  border-radius: 0.3em;
+}
+.command-content {
+  background-color: #eceff1;
+  padding: 1em;
+}
+.command-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+}
+.command-id-link{
+  flex-grow: 0;
+}
+.command-id-link a {
+  font-size: xx-large;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 1px  1px 0px #000000bb,
+              -1px -1px 0px #ffffffbb;
+  text-decoration: none;
+  margin-left: 0.2em;
+}
+.command-id-link a:link {
+  text-shadow: 1px  1px 0px #000000bb,
+              -1px -1px 0px #ffffffbb;
+}
+.command-id-link a:visited {
+  text-shadow: 1px  1px 0px #000000bb,
+              -1px -1px 0px #ffffffbb;
+}
+.command-id-link a:visited:hover {
+  color: #ec407a;
+  background-color: #00000000;
+  text-shadow: 1px  1px 0px #000000bb,
+              -1px -1px 0px #ffffffbb,
+               0px 0px 10px #fff,
+               0px 0px 5px #ec407a,
+               0px 0px 5px #ec407a;
+}
+.command-id-link a:hover {
+  color: #ec407a;
+  background-color: #00000000;
+  text-shadow: 1px  1px 0px #000000bb,
+              -1px -1px 0px #ffffffbb
+               0px 0px 10px #fff,
+               0px 0px 5px #ec407a,
+               0px 0px 5px #ec407a;
+}
+.command-id-link a:active {
+  color: #ffeb3b;
+  background-color: #00000000;
+  text-shadow: 1px  1px 0px #000000bb,
+              -1px -1px 0px #ffffffbb,
+                 0px 0px 10px #fff,
+                 0px 0px 5px #ffeb3b,
+                 0px 0px 5px #ffeb3b;
+}
+.command-id-link a:visited:active {
+  color: #ffeb3b;
+  background-color: #00000000;
+  text-shadow: 1px  1px 0px #000000bb,
+              -1px -1px 0px #ffffffbb,
+                 0px 0px 10px #fff,
+                 0px 0px 5px #ffeb3b,
+                 0px 0px 5px #ffeb3b;
+}
+.command-description {
+  color: #26323899;
+  font-size: smaller;
+  text-align: center;
+  font-weight: bold;
+  flex-grow: 1;
+}
+
+.command-invocation {
+  padding: 1em;
+  color: #fff;
+  background-color: #005662;
+  font-size: small;
+  font-family: monospace;
+  border-radius: 0.5em;
+  text-shadow: 0 0 2px #ffccbccc;
+}
+.command-stats-table {
+  margin-top: 0.2em;
+  border-radius: 0.5em;
+  padding: 0.2em;
+  padding-top: 0.4em;
+  display: flex;
+  flex-direction: column;
+  background-color: #eae3998a;
+  color: #263238cc;
+  margin-bottom: 0.2em;
+}
+.command-stats-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-size: small;
+  text-transform: uppercase;
+}
+.command-stats-row p .value {
+  color: #00251aaa;
+  text-shadow: 0 0 2px #82ada944;
+  font-weight: bold;
+}
+.output-box {
+  margin-top: 0.4em;
+  margin-bottom: 0.2em;
+  padding: 1em;
+  color: #000a12;
+  background-color: #cfd8dc;
+  font-size: small;
+  font-family: monospace;
+  border-radius: 0.5em;
+  max-height: 20em;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+.output-box xmp{
+  white-space: pre;
+}
+.stage-name p {
+  margin-left: 0.5em;
+  color: #546e7a;
+  text-shadow:  -1px  0px 0px #fff
+               ,-2px  0px 0px #ffffff99
+               ,-1px  1px 0px #ffffff99
+               ;
+  font-size: 48pt;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  font-weight: bold;
+  font-style: italic;
+}
+.stage-name .underline {
+  width: 100%;
+  height: 1.1em;
+  background-color: #546e7a;
+  margin-top: -1.6em;
+}
+.stage-name {
+  margin-top: 6em;
+  margin-bottom: 3em;
+}
+
+.outcome-table-info-box {
+  margin-top: 0.4em;
+  margin-bottom: 0.2em;
+  padding: 1em;
+  color: #000a12;
+  background-color: #ffee58;
+  border-radius: 0.5em;
+}
+.outcome-table-info-box .outcome{
+  font-weight: bold;
+}
+#toc {
+  margin-bottom: 6em;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 1;
+  margin-right: 3em;
+}
+.toc-title {
+  text-align: center;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  margin-bottom: -1em;
+}
+.toc-section{
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  text-transform: capitalize;
+}
+.toc-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.toc-row-icon {
+  padding-right: 8px;
+}
+.status-icon-cross {
+  fill: #f44336;
+    width: 16px;
+    height: 16px;
+}
+.status-icon-tick {
+  fill: #3f51b5;
+  stroke: #ffffff77;
+  stroke-width: 1px;
+  width: 16px;
+  height: 16px;
+}
+
+.status-icon-in-progress {
+  fill: #333;
+  width: 16px;
+  height: 16px;
+}
+
+.status-icon-in-progress circle {
+  stroke: #333;
+  stroke-width: 2px;
+  fill: none
+}
+a:link {
+  color: #1e88e5;
+}
+a:visited {
+  color: #1e88e5;
+}
+a:visited:hover {
+  background-color: #1e88e5;
+  color: #fff;
+  text-decoration: none;
+}
+a:hover {
+  background-color: #1e88e5;
+  color: #fff;
+  text-decoration: none;
+}
+a:active {
+  background-color: #ec407a;
+  color: #fff;
+  text-decoration: none;
+}
+a:visited:active {
+  background-color: #ec407a;
+  color: #fff;
+  text-decoration: none;
+}
+
+#contents-container {
+  margin-top: 6em;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+#depgraph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: flex-start;
+  flex-shrink: 7;
+}
+
+#depgraph-title p {
+  text-align: center;
+  font-variant: small-caps;
+  text-transform: lowercase;
+}
+
+#depgraph-preview img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#depgraph-preview {
+  padding: 1em;
+}
+
+.memory-box {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5em;
+  align-items: center;
+}
+.memory-preview {
+  width: 75%;
+}
+.memory-preview svg {
+  margin-left: -1em;
+  margin-right: -2em;
+}
+.memory-table {
+}
+.memory-title {
+  text-align: center;
+  font-style: bold;
+}
+.memory-subtitle {
+  text-transform: lowercase;
+  font-variant: small-caps;
+  text-align: center;
+  opacity: 0.8;
+}
+.memory-pad {
+  width: 1.5em;
+}
+.memory-value {
+  text-align: center;
+  margin-right: 2em;
+}
+.rss {
+  color: #ab47bc;
+}
+.vsz {
+  color: #4caf50;
+}
+
+
+@media (prefers-color-scheme: dark){
+  a:link {
+    color: #29b6f6;
+  }
+  a:visited {
+    color: #29b6f6;
+  }
+  a:visited:hover {
+    color: #263238;
+    background-color: #29b6f6;
+  }
+  a:hover {
+    color: #263238;
+    background-color: #29b6f6;
+  }
+  a:active {
+    color: #263238;
+    background-color: #ec407a;
+  }
+  a:visited:active {
+    color: #263238;
+    background-color: #ec407a;
+  }
+  .command-id-link a:link {
+    text-shadow: 1px  1px 0px #000000bb,
+                -1px -1px 0px #ffffffbb;
+  }
+  .command-id-link a:visited {
+    text-shadow: 1px  1px 0px #000000bb,
+                -1px -1px 0px #ffffffbb;
+  }
+  .command-id-link a:visited:hover {
+    color: #ec407a;
+    background-color: #00000000;
+    text-shadow: 1px  1px 0px #000000bb,
+                -1px -1px 0px #ffffffbb.
+                 0px 0px 10px #fff,
+                 0px 0px 5px #ec407a,
+                 0px 0px 5px #ec407a;
+  }
+  .command-id-link a:hover {
+    color: #ec407a;
+    background-color: #00000000;
+    text-shadow: 1px  1px 0px #000000bb,
+                -1px -1px 0px #ffffffbb,
+                 0px 0px 10px #fff,
+                 0px 0px 5px #ec407a,
+                 0px 0px 5px #ec407a;
+  }
+  .command-id-link a:active {
+    color: #ffeb3b;
+    background-color: #00000000;
+    text-shadow: 1px  1px 0px #000000bb,
+                -1px -1px 0px #ffffffbb,
+                 0px 0px 10px #fff,
+                 0px 0px 5px #ffeb3b,
+                 0px 0px 5px #ffeb3b;
+  }
+  .command-id-link a:visited:active {
+    color: #ffeb3b;
+    background-color: #00000000;
+    text-shadow: 1px  1px 0px #000000bb,
+                -1px -1px 0px #ffffffbb,
+                 0px 0px 10px #fff,
+                 0px 0px 5px #ffeb3b,
+                 0px 0px 5px #ffeb3b;
+  }
+  body {
+    color: #babdbe;
+    background-color: #263238;
+  }
+  .outcome-table-info-box p{
+    color: #000a12;
+  }
+  p {
+    color: #babdbe;
+  }
+  #subtitle {
+    color: #fff;
+  }
+  .command-table {
+    background-color: #37474f;
+  }
+  .command-content {
+    background-color: #37474f;
+  }
+  .command-invocation p {
+    color: #fff;
+  }
+  .command-stats-table {
+    background-color: #eae399d0;
+    color: #263238;
+  }
+  .command-stats-table p {
+    color: #263238;
+  }
+  .output-box {
+    color: #cfd8dccc;
+    background-color: #102027;
+  }
+  .stage-name p {
+    text-shadow: -1px  0px 0px #263238,
+                 -2px  0px 0px #26323899,
+                 -1px  1px 0px #26323899;
+  }
+  .status-icon-in-progress { fill: #ddd; }
+  .status-icon-in-progress circle { stroke: #ddd; }
+
+  /* SVG graphs */
+  g text {
+    fill: #eceff1;
+    stroke: #fff0;
+  }
+}
+</style>
+</head>
+<body>
+<div id="content">
+
+  <div id="title">
+    <h1>
+      RMC pipeline &lsquo;src/test/dashboard/books/The Rust Reference/Statements and expressions/Expressions/Operator expressions/263.rs&rsquo;
+    </h1>
+    <p id="subtitle">
+      Litani CI Dashboard
+    </p>
+  </div><!-- id="title" -->
+
+  <div class=run-info>
+    <ul>
+      <li>Pipeline status: fail</li>
+      <li>2021-11-10T19:37:24Z</li>
+      <li>a622f1ba-4daf-4d52-b179-a386016713c2</li>
+    </ul>
+  </div><!-- class=run-info -->
+
+  <div id="contents-container">
+
+    <div id="toc">
+      <div class="toc-title">
+        <p>Summary of jobs for this pipeline</p>
+      </div><!-- class="toc-title" -->
+
+      
+        <div class="toc-section">
+          <p>check</p>
+        </div><!-- class="toc-section" -->
+        
+          <div class="toc-row">
+
+            <div class="toc-row-icon">
+              
+                <svg height="16px" width="16px" class="status-icon-tick">
+                  <polygon points="1,11 6,15 15,3 13,1 6,12 3,8"></polygon>
+                </svg>
+              
+            </div><!-- class="toc-row-icon" -->
+
+            <div class="toc-row-job-name">
+              <p>
+              <a href="#job-7631134c-4518-4428-bc48-9bb5560834ab">
+              
+              Is this valid Rust code?
+              
+              </a>
+              </p>
+            </div><!-- class="toc-row-job-name" -->
+
+          </div><!-- class="toc-row" -->
+
+        
+      
+        <div class="toc-section">
+          <p>codegen</p>
+        </div><!-- class="toc-section" -->
+        
+          <div class="toc-row">
+
+            <div class="toc-row-icon">
+              
+                <svg height="16px" width="16px" class="status-icon-tick">
+                  <polygon points="1,11 6,15 15,3 13,1 6,12 3,8"></polygon>
+                </svg>
+              
+            </div><!-- class="toc-row-icon" -->
+
+            <div class="toc-row-job-name">
+              <p>
+              <a href="#job-19f6f6a3-cc64-4ad8-b789-29e8489f1681">
+              
+              Does RMC support all the Rust features used in it?
+              
+              </a>
+              </p>
+            </div><!-- class="toc-row-job-name" -->
+
+          </div><!-- class="toc-row" -->
+
+        
+      
+        <div class="toc-section">
+          <p>verification</p>
+        </div><!-- class="toc-section" -->
+        
+          <div class="toc-row">
+
+            <div class="toc-row-icon">
+              
+                <svg height="16px" width="16px" class="status-icon-cross">
+                  <polygon points="
+                      1,3 7,8 1,13 3,15 8,9 13,15 15,13 9,8 15,3 13,1 8,7 3,1">
+                  </polygon>
+                </svg>
+              
+            </div><!-- class="toc-row-icon" -->
+
+            <div class="toc-row-job-name">
+              <p>
+              <a href="#job-db22da70-4d8c-4369-ab41-639c322f07b6">
+              
+              Can RMC reason about it?
+              
+              </a>
+              </p>
+            </div><!-- class="toc-row-job-name" -->
+
+          </div><!-- class="toc-row" -->
+
+        
+      
+    </div><!-- id="toc" -->
+
+
+    
+
+  </div><!-- id="contents-container" -->
+
+
+  
+  <div class="stage">
+    <div class="stage-name">
+      <p>check</p>
+      <div class="underline"></div>
+    </div><!-- class="stage-name" -->
+
+    
+    <div class="command-table" id="job-7631134c-4518-4428-bc48-9bb5560834ab">
+      
+      <div class="success">
+      
+        <div class="command-content">
+          <div class="command-header">
+            <div class="command-id-link">
+              <p>
+                <a href="#job-7631134c-4518-4428-bc48-9bb5560834ab">#</a>
+              </p>
+            </div><!-- class="command-id-link" -->
+            <div class="command-description">
+              
+              <p>
+                Is this valid Rust code?
+              </p>
+              
+            </div><!-- class="command-description" -->
+          </div><!-- class="command-header" -->
+          <div class="command-invocation">
+            <p>
+            "rmc-rustc" "--edition" "2018" "-Z" "no-codegen" "src/test/dashboard/books/The Rust Reference/Statements and expressions/Expressions/Operator expressions/263.rs"
+            </p>
+          </div><!-- class="command-invocation" -->
+
+          
+          <div class="command-stats-table">
+            <div class="command-stats-row">
+              <p>Command return code:
+              <span class="value">
+                0
+              </span></p>
+              <p>OK returns:
+              <span class="value">
+                ['0']
+              </span></p>
+              <p>Ignored returns:
+              <span class="value">
+                None
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Timeout:
+              <span class="value">
+                5
+              </span></p>
+              <p>Timeout ok:
+              <span class="value">
+                False
+              </span></p>
+              <p>Timeout ignored:
+              <span class="value">
+                False
+              </span></p>
+              <p>Timeout reached:
+              <span class="value">
+                False
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Start time:
+              <span class="value">
+                2021-11-10T19:40:26Z
+              </span></p>
+              <p>Duration:
+              <span class="value">
+                00s
+              </span></p>
+              <p>End time:
+              <span class="value">
+                2021-11-10T19:40:26Z
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Command successful:
+              <span class="value">
+              
+              yes
+              
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+          </div><!-- class="command-stats-table" -->
+          
+
+          
+
+
+          
+
+
+          
+
+          
+          <div class="output-box"><xmp>stderr:
+            
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN4core5slice29_$LT$impl$u20$$u5b$T$u5d$$GT$6as_ptr17h55dfef322d0bc30fE::1::var_1::self" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_5" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_7" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_44" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_48" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_8::lhs" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_8::lhs" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_13::rhs" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_13::rhs" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN49_$LT$u8$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hbd9dff807a29fc6aE::1::var_10" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN49_$LT$u8$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hbd9dff807a29fc6aE::1::var_12" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN49_$LT$u8$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hbd9dff807a29fc6aE::1::var_16" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN49_$LT$u8$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hbd9dff807a29fc6aE::1::var_20" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN106_$LT$core..ops..range..Range$LT$usize$GT$$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$5index17h9d99b45dc78e0ad4E::1::var_11" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN106_$LT$core..ops..range..Range$LT$usize$GT$$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$5index17h9d99b45dc78e0ad4E::1::var_14" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN106_$LT$core..ops..range..Range$LT$usize$GT$$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$5index17h9d99b45dc78e0ad4E::1::var_2::slice" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN106_$LT$core..ops..range..Range$LT$usize$GT$$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$5index17h9d99b45dc78e0ad4E::1::var_15" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+            </xmp>
+          </div><!-- class="output-box" -->
+          
+
+        </div><!-- class="command-content" -->
+      </div><!-- class="fail" -->
+    </div><!-- id="command-table" -->
+    
+
+  </div><!-- class="stage" -->
+  
+  <div class="stage">
+    <div class="stage-name">
+      <p>codegen</p>
+      <div class="underline"></div>
+    </div><!-- class="stage-name" -->
+
+    
+    <div class="command-table" id="job-19f6f6a3-cc64-4ad8-b789-29e8489f1681">
+      
+      <div class="success">
+      
+        <div class="command-content">
+          <div class="command-header">
+            <div class="command-id-link">
+              <p>
+                <a href="#job-19f6f6a3-cc64-4ad8-b789-29e8489f1681">#</a>
+              </p>
+            </div><!-- class="command-id-link" -->
+            <div class="command-description">
+              
+              <p>
+                Does RMC support all the Rust features used in it?
+              </p>
+              
+            </div><!-- class="command-description" -->
+          </div><!-- class="command-header" -->
+          <div class="command-invocation">
+            <p>
+            "rmc-rustc" "--edition" "2018" "--out-dir" "build/tmp" "src/test/dashboard/books/The Rust Reference/Statements and expressions/Expressions/Operator expressions/263.rs"
+            </p>
+          </div><!-- class="command-invocation" -->
+
+          
+          <div class="command-stats-table">
+            <div class="command-stats-row">
+              <p>Command return code:
+              <span class="value">
+                0
+              </span></p>
+              <p>OK returns:
+              <span class="value">
+                ['0']
+              </span></p>
+              <p>Ignored returns:
+              <span class="value">
+                None
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Timeout:
+              <span class="value">
+                10
+              </span></p>
+              <p>Timeout ok:
+              <span class="value">
+                False
+              </span></p>
+              <p>Timeout ignored:
+              <span class="value">
+                False
+              </span></p>
+              <p>Timeout reached:
+              <span class="value">
+                False
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Start time:
+              <span class="value">
+                2021-11-10T19:49:14Z
+              </span></p>
+              <p>Duration:
+              <span class="value">
+                00s
+              </span></p>
+              <p>End time:
+              <span class="value">
+                2021-11-10T19:49:14Z
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Command successful:
+              <span class="value">
+              
+              yes
+              
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+          </div><!-- class="command-stats-table" -->
+          
+
+          
+
+
+          
+
+
+          
+
+          
+          <div class="output-box"><xmp>stderr:
+            
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN4core5slice29_$LT$impl$u20$$u5b$T$u5d$$GT$6as_ptr17h55dfef322d0bc30fE::1::var_1::self" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_5" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_7" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_44" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_48" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_8::lhs" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_8::lhs" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_13::rhs" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN48_$LT$A$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hf04868605d5e63dfE::1::var_13::rhs" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN49_$LT$u8$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hbd9dff807a29fc6aE::1::var_10" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN49_$LT$u8$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hbd9dff807a29fc6aE::1::var_12" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN49_$LT$u8$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hbd9dff807a29fc6aE::1::var_16" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN49_$LT$u8$u20$as$u20$core..slice..cmp..SliceOrd$GT$7compare17hbd9dff807a29fc6aE::1::var_20" }, typ: StructTag("tag-_9002246437548051943"), location: None }, field: "data" }, typ: Pointer { typ: Unsignedbv { width: 8 } }, location: None }
+Expr type
+Pointer { typ: Unsignedbv { width: 8 } }
+Type from MIR
+FlexibleArray { typ: Unsignedbv { width: 8 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN106_$LT$core..ops..range..Range$LT$usize$GT$$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$5index17h9d99b45dc78e0ad4E::1::var_11" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN106_$LT$core..ops..range..Range$LT$usize$GT$$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$5index17h9d99b45dc78e0ad4E::1::var_14" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN106_$LT$core..ops..range..Range$LT$usize$GT$$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$5index17h9d99b45dc78e0ad4E::1::var_2::slice" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+WARN rustc_codegen_rmc::codegen::place Unexpected type mismatch in projection:
+Expr { value: Member { lhs: Expr { value: Symbol { identifier: "_ZN106_$LT$core..ops..range..Range$LT$usize$GT$$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$5index17h9d99b45dc78e0ad4E::1::var_15" }, typ: StructTag("tag-_14254013527129944634"), location: None }, field: "data" }, typ: Pointer { typ: Signedbv { width: 32 } }, location: None }
+Expr type
+Pointer { typ: Signedbv { width: 32 } }
+Type from MIR
+FlexibleArray { typ: Signedbv { width: 32 } }
+            </xmp>
+          </div><!-- class="output-box" -->
+          
+
+        </div><!-- class="command-content" -->
+      </div><!-- class="fail" -->
+    </div><!-- id="command-table" -->
+    
+
+  </div><!-- class="stage" -->
+  
+  <div class="stage">
+    <div class="stage-name">
+      <p>verification</p>
+      <div class="underline"></div>
+    </div><!-- class="stage-name" -->
+
+    
+    <div class="command-table" id="job-db22da70-4d8c-4369-ab41-639c322f07b6">
+      
+      <div class="fail">
+      
+        <div class="command-content">
+          <div class="command-header">
+            <div class="command-id-link">
+              <p>
+                <a href="#job-db22da70-4d8c-4369-ab41-639c322f07b6">#</a>
+              </p>
+            </div><!-- class="command-id-link" -->
+            <div class="command-description">
+              
+              <p>
+                Can RMC reason about it?
+              </p>
+              
+            </div><!-- class="command-description" -->
+          </div><!-- class="command-header" -->
+          <div class="command-invocation">
+            <p>
+            RUSTFLAGS="--edition 2018" "rmc" "src/test/dashboard/books/The Rust Reference/Statements and expressions/Expressions/Operator expressions/263.rs"
+            </p>
+          </div><!-- class="command-invocation" -->
+
+          
+          <div class="command-stats-table">
+            <div class="command-stats-row">
+              <p>Command return code:
+              <span class="value">
+                10
+              </span></p>
+              <p>OK returns:
+              <span class="value">
+                ['0']
+              </span></p>
+              <p>Ignored returns:
+              <span class="value">
+                None
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Timeout:
+              <span class="value">
+                60
+              </span></p>
+              <p>Timeout ok:
+              <span class="value">
+                False
+              </span></p>
+              <p>Timeout ignored:
+              <span class="value">
+                False
+              </span></p>
+              <p>Timeout reached:
+              <span class="value">
+                False
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Start time:
+              <span class="value">
+                2021-11-10T19:49:14Z
+              </span></p>
+              <p>Duration:
+              <span class="value">
+                01s
+              </span></p>
+              <p>End time:
+              <span class="value">
+                2021-11-10T19:49:15Z
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+            <div class="command-stats-row">
+              <p>Command successful:
+              <span class="value">
+              
+              no
+              
+              </span></p>
+            </div><!-- class="command-stats-row" -->
+          </div><!-- class="command-stats-table" -->
+          
+
+          
+
+
+          
+
+
+          
+          <div class="output-box"><xmp>stdout:
+            
+CBMC version 5.43.0 (cbmc-5.43.0) 64-bit x86_64 linux
+Reading GOTO program from file
+Reading: src/test/dashboard/books/The Rust Reference/Statements and expressions/Expressions/Operator expressions/263.goto
+Generating GOTO Program
+Adding CPROVER library (x86_64)
+Removal of function pointers and virtual functions
+Generic Property Instrumentation
+Running with 8 object bits, 56 offset bits (default)
+Starting Bounded Model Checking
+Unwinding loop _RINvNtCs61cxoXOqFbB_4core3cmp6min_byjNvYjNtB2_3Ord3cmpECsicFN8kyuae5_3_263.0 iteration 1  thread 0
+Unwinding loop _RNvXs6_NtNtCs61cxoXOqFbB_4core5slice3cmplNtB5_8SliceOrd7compareCsicFN8kyuae5_3_263.0 iteration 1 file /home/runner/work/rmc/rmc/library/core/src/slice/cmp.rs line 176 column 9 function <A as core::slice::cmp::SliceOrd>::compare thread 0
+Unwinding loop _RINvNtCs61cxoXOqFbB_4core3cmp6min_byjNvYjNtB2_3Ord3cmpECsicFN8kyuae5_3_263.0 iteration 1  thread 0
+Runtime Symex: 0.144451s
+size of program expression: 1756 steps
+simple slicing removed 24 assignments
+Generated 295 VCC(s), 24 remaining after simplification
+Runtime Postprocess Equation: 0.000230102s
+Passing problem to propositional reduction
+converting SSA
+Runtime Convert SSA: 0.0291921s
+Running propositional reduction
+Post-processing
+Runtime Post-process: 3.37e-05s
+Solving with MiniSAT 2.2.1 with simplifier
+33968 variables, 8037 clauses
+SAT checker: instance is SATISFIABLE
+Runtime Solver: 0.0118269s
+Runtime decision procedure: 0.0551103s
+Running propositional reduction
+Solving with MiniSAT 2.2.1 with simplifier
+33968 variables, 60 clauses
+SAT checker: instance is UNSATISFIABLE
+Runtime Solver: 9.1501e-05s
+Runtime decision procedure: 0.000141501s
+
+** Results:
+[overflow.1] arithmetic overflow on unsigned + in var_3 + var_4: SUCCESS
+[pointer_arithmetic.1] pointer arithmetic: pointer NULL in var_3 + var_4: SUCCESS
+[pointer_arithmetic.2] pointer arithmetic: pointer invalid in var_3 + var_4: SUCCESS
+[pointer_arithmetic.3] pointer arithmetic: deallocated dynamic object in var_3 + var_4: SUCCESS
+[pointer_arithmetic.4] pointer arithmetic: dead object in var_3 + var_4: SUCCESS
+[pointer_arithmetic.5] pointer arithmetic: pointer outside object bounds in var_3 + var_4: SUCCESS
+[pointer_arithmetic.6] pointer arithmetic: invalid integer address in var_3 + var_4: SUCCESS
+/home/runner/work/rmc/rmc/library/core/src/clone.rs function std::clone::impls::<impl std::clone::Clone for usize>::clone
+[std::clone::impls::<impl std::clone::Clone for usize>::clone.pointer_dereference.1] line 185 dereference failure: pointer NULL in *self: SUCCESS
+[std::clone::impls::<impl std::clone::Clone for usize>::clone.pointer_dereference.2] line 185 dereference failure: pointer invalid in *self: SUCCESS
+[std::clone::impls::<impl std::clone::Clone for usize>::clone.pointer_dereference.3] line 185 dereference failure: deallocated dynamic object in *self: SUCCESS
+[std::clone::impls::<impl std::clone::Clone for usize>::clone.pointer_dereference.4] line 185 dereference failure: dead object in *self: SUCCESS
+[std::clone::impls::<impl std::clone::Clone for usize>::clone.pointer_dereference.5] line 185 dereference failure: pointer outside object bounds in *self: SUCCESS
+[std::clone::impls::<impl std::clone::Clone for usize>::clone.pointer_dereference.6] line 185 dereference failure: invalid integer address in *self: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function _RINvNtCs61cxoXOqFbB_4core3cmp6min_byjNvYjNtB2_3Ord3cmpECsicFN8kyuae5_3_263::1::var_3::compare
+[_RINvNtCs61cxoXOqFbB_4core3cmp6min_byjNvYjNtB2_3Ord3cmpECsicFN8kyuae5_3_263::1::var_3::compare.assertion.1] line 1144 assertion false: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function _RINvNtCs61cxoXOqFbB_4core3cmp6min_byjNvYjNtB2_3Ord3cmpECsicFN8kyuae5_3_263::1::var_5
+[_RINvNtCs61cxoXOqFbB_4core3cmp6min_byjNvYjNtB2_3Ord3cmpECsicFN8kyuae5_3_263::1::var_5.assertion.1] line 1145 assertion false: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function std::cmp::PartialOrd::ge
+[std::cmp::PartialOrd::ge.overflow.1] line 1095 arithmetic overflow on signed - in *((signed char *)((unsigned char *)&var_3 + 0)) - 2: SUCCESS
+[std::cmp::PartialOrd::ge.overflow.2] line 1095 arithmetic overflow on signed to unsigned type conversion in (unsigned long int)(*((signed char *)((unsigned char *)&var_3 + 0)) - 2): FAILURE
+[std::cmp::PartialOrd::ge.pointer_arithmetic.1] line 1095 pointer arithmetic: dead object in (unsigned char *)&var_3 + 0: SUCCESS
+[std::cmp::PartialOrd::ge.pointer_dereference.1] line 1095 dereference failure: dead object in *((signed char *)((unsigned char *)&var_3 + 0)): SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function std::cmp::PartialOrd::lt
+[std::cmp::PartialOrd::lt.overflow.1] line 1035 arithmetic overflow on signed - in *((signed char *)((unsigned char *)&var_3 + 0)) - 2: SUCCESS
+[std::cmp::PartialOrd::lt.overflow.2] line 1035 arithmetic overflow on signed to unsigned type conversion in (unsigned long int)(*((signed char *)((unsigned char *)&var_3 + 0)) - 2): FAILURE
+[std::cmp::PartialOrd::lt.pointer_arithmetic.1] line 1035 pointer arithmetic: dead object in (unsigned char *)&var_3 + 0: SUCCESS
+[std::cmp::PartialOrd::lt.pointer_dereference.1] line 1035 dereference failure: dead object in *((signed char *)((unsigned char *)&var_3 + 0)): SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function std::cmp::impls::<impl std::cmp::Ord for i32>::cmp
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.1] line 1342 dereference failure: pointer NULL in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.2] line 1342 dereference failure: pointer invalid in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.3] line 1342 dereference failure: deallocated dynamic object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.4] line 1342 dereference failure: dead object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.5] line 1342 dereference failure: pointer outside object bounds in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.6] line 1342 dereference failure: invalid integer address in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.7] line 1342 dereference failure: pointer NULL in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.8] line 1342 dereference failure: pointer invalid in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.9] line 1342 dereference failure: deallocated dynamic object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.10] line 1342 dereference failure: dead object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.11] line 1342 dereference failure: pointer outside object bounds in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.12] line 1342 dereference failure: invalid integer address in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.13] line 1343 dereference failure: pointer NULL in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.14] line 1343 dereference failure: pointer invalid in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.15] line 1343 dereference failure: deallocated dynamic object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.16] line 1343 dereference failure: dead object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.17] line 1343 dereference failure: pointer outside object bounds in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.18] line 1343 dereference failure: invalid integer address in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.19] line 1343 dereference failure: pointer NULL in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.20] line 1343 dereference failure: pointer invalid in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.21] line 1343 dereference failure: deallocated dynamic object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.22] line 1343 dereference failure: dead object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.23] line 1343 dereference failure: pointer outside object bounds in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for i32>::cmp.pointer_dereference.24] line 1343 dereference failure: invalid integer address in *other: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function std::cmp::impls::<impl std::cmp::Ord for usize>::cmp
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.1] line 1342 dereference failure: pointer NULL in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.2] line 1342 dereference failure: pointer invalid in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.3] line 1342 dereference failure: deallocated dynamic object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.4] line 1342 dereference failure: dead object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.5] line 1342 dereference failure: pointer outside object bounds in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.6] line 1342 dereference failure: invalid integer address in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.7] line 1342 dereference failure: pointer NULL in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.8] line 1342 dereference failure: pointer invalid in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.9] line 1342 dereference failure: deallocated dynamic object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.10] line 1342 dereference failure: dead object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.11] line 1342 dereference failure: pointer outside object bounds in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.12] line 1342 dereference failure: invalid integer address in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.13] line 1343 dereference failure: pointer NULL in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.14] line 1343 dereference failure: pointer invalid in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.15] line 1343 dereference failure: deallocated dynamic object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.16] line 1343 dereference failure: dead object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.17] line 1343 dereference failure: pointer outside object bounds in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.18] line 1343 dereference failure: invalid integer address in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.19] line 1343 dereference failure: pointer NULL in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.20] line 1343 dereference failure: pointer invalid in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.21] line 1343 dereference failure: deallocated dynamic object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.22] line 1343 dereference failure: dead object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.23] line 1343 dereference failure: pointer outside object bounds in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::Ord for usize>::cmp.pointer_dereference.24] line 1343 dereference failure: invalid integer address in *other: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.1] line 1327 dereference failure: pointer NULL in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.2] line 1327 dereference failure: pointer invalid in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.3] line 1327 dereference failure: deallocated dynamic object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.4] line 1327 dereference failure: dead object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.5] line 1327 dereference failure: pointer outside object bounds in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.6] line 1327 dereference failure: invalid integer address in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.7] line 1327 dereference failure: pointer NULL in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.8] line 1327 dereference failure: pointer invalid in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.9] line 1327 dereference failure: deallocated dynamic object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.10] line 1327 dereference failure: dead object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.11] line 1327 dereference failure: pointer outside object bounds in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd for usize>::lt.pointer_dereference.12] line 1327 dereference failure: invalid integer address in *other: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.1] line 1440 dereference failure: pointer NULL in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.2] line 1440 dereference failure: pointer invalid in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.3] line 1440 dereference failure: deallocated dynamic object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.4] line 1440 dereference failure: dead object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.5] line 1440 dereference failure: pointer outside object bounds in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.6] line 1440 dereference failure: invalid integer address in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.7] line 1440 dereference failure: pointer NULL in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.8] line 1440 dereference failure: pointer invalid in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.9] line 1440 dereference failure: deallocated dynamic object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.10] line 1440 dereference failure: dead object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.11] line 1440 dereference failure: pointer outside object bounds in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::ge.pointer_dereference.12] line 1440 dereference failure: invalid integer address in *other: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.1] line 1428 dereference failure: pointer NULL in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.2] line 1428 dereference failure: pointer invalid in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.3] line 1428 dereference failure: deallocated dynamic object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.4] line 1428 dereference failure: dead object in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.5] line 1428 dereference failure: pointer outside object bounds in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.6] line 1428 dereference failure: invalid integer address in *self: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.7] line 1428 dereference failure: pointer NULL in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.8] line 1428 dereference failure: pointer invalid in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.9] line 1428 dereference failure: deallocated dynamic object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.10] line 1428 dereference failure: dead object in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.11] line 1428 dereference failure: pointer outside object bounds in *other: SUCCESS
+[std::cmp::impls::<impl std::cmp::PartialOrd<&B> for &A>::lt.pointer_dereference.12] line 1428 dereference failure: invalid integer address in *other: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/cmp.rs function std::cmp::min_by
+[std::cmp::min_by.assertion.2] line 1144 resume instruction: SUCCESS
+[std::cmp::min_by.assertion.1] line 1145 unreachable code: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/iter/range.rs function <std::ops::Range<T> as std::iter::range::RangeIteratorImpl>::spec_next
+[<std::ops::Range<T> as std::iter::range::RangeIteratorImpl>::spec_next.pointer_dereference.1] line 624 dereference failure: pointer NULL in *var_9: SUCCESS
+[<std::ops::Range<T> as std::iter::range::RangeIteratorImpl>::spec_next.pointer_dereference.2] line 624 dereference failure: pointer invalid in *var_9: SUCCESS
+[<std::ops::Range<T> as std::iter::range::RangeIteratorImpl>::spec_next.pointer_dereference.3] line 624 dereference failure: deallocated dynamic object in *var_9: SUCCESS
+[<std::ops::Range<T> as std::iter::range::RangeIteratorImpl>::spec_next.pointer_dereference.4] line 624 dereference failure: dead object in *var_9: SUCCESS
+[<std::ops::Range<T> as std::iter::range::RangeIteratorImpl>::spec_next.pointer_dereference.5] line 624 dereference failure: pointer outside object bounds in *var_9: SUCCESS
+[<std::ops::Range<T> as std::iter::range::RangeIteratorImpl>::spec_next.pointer_dereference.6] line 624 dereference failure: invalid integer address in *var_9: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/mem/mod.rs function std::mem::replace
+[std::mem::replace.assertion.1] line 834 resume instruction: SUCCESS
+[std::mem::replace.pointer_dereference.1] line 839 dereference failure: pointer NULL in *var_3: SUCCESS
+[std::mem::replace.pointer_dereference.2] line 839 dereference failure: pointer invalid in *var_3: SUCCESS
+[std::mem::replace.pointer_dereference.3] line 839 dereference failure: deallocated dynamic object in *var_3: SUCCESS
+[std::mem::replace.pointer_dereference.4] line 839 dereference failure: dead object in *var_3: SUCCESS
+[std::mem::replace.pointer_dereference.5] line 839 dereference failure: pointer outside object bounds in *var_3: SUCCESS
+[std::mem::replace.pointer_dereference.6] line 839 dereference failure: invalid integer address in *var_3: SUCCESS
+[std::mem::replace.pointer_dereference.7] line 840 dereference failure: pointer NULL in *var_5: SUCCESS
+[std::mem::replace.pointer_dereference.8] line 840 dereference failure: pointer invalid in *var_5: SUCCESS
+[std::mem::replace.pointer_dereference.9] line 840 dereference failure: deallocated dynamic object in *var_5: SUCCESS
+[std::mem::replace.pointer_dereference.10] line 840 dereference failure: dead object in *var_5: SUCCESS
+[std::mem::replace.pointer_dereference.11] line 840 dereference failure: pointer outside object bounds in *var_5: SUCCESS
+[std::mem::replace.pointer_dereference.12] line 840 dereference failure: invalid integer address in *var_5: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/ops/function.rs function _RNvYNvYjNtNtCs61cxoXOqFbB_4core3cmp3Ord3cmpINtNtNtBa_3ops8function6FnOnceTRjB1a_EE9call_onceCsicFN8kyuae5_3_263::1::var_1
+[_RNvYNvYjNtNtCs61cxoXOqFbB_4core3cmp3Ord3cmpINtNtNtBa_3ops8function6FnOnceTRjB1a_EE9call_onceCsicFN8kyuae5_3_263::1::var_1.assertion.1] line 227 assertion false: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/ptr/const_ptr.rs function std::ptr::const_ptr::<impl *const T>::add
+[std::ptr::const_ptr::<impl *const T>::add.overflow.1] line 516 arithmetic overflow on unsigned to signed type conversion in (long int)var_5: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/slice/cmp.rs function <A as core::slice::cmp::SliceOrd>::compare
+[<A as core::slice::cmp::SliceOrd>::compare.assertion.1] line 176 unreachable code: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.overflow.1] line 176 arithmetic overflow on unsigned to signed type conversion in (long int)var_23.case: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.assertion.2] line 177 index out of bounds: the length is move _33 but the index is _32: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.assertion.3] line 177 index out of bounds: the length is move _38 but the index is _37: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.1] line 177 pointer arithmetic: pointer NULL in lhs.data + var_32: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.2] line 177 pointer arithmetic: pointer invalid in lhs.data + var_32: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.3] line 177 pointer arithmetic: deallocated dynamic object in lhs.data + var_32: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.4] line 177 pointer arithmetic: dead object in lhs.data + var_32: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.5] line 177 pointer arithmetic: pointer outside object bounds in lhs.data + var_32: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.6] line 177 pointer arithmetic: invalid integer address in lhs.data + var_32: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.7] line 177 pointer arithmetic: pointer NULL in rhs.data + var_37: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.8] line 177 pointer arithmetic: pointer invalid in rhs.data + var_37: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.9] line 177 pointer arithmetic: deallocated dynamic object in rhs.data + var_37: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.10] line 177 pointer arithmetic: dead object in rhs.data + var_37: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.11] line 177 pointer arithmetic: pointer outside object bounds in rhs.data + var_37: SUCCESS
+[<A as core::slice::cmp::SliceOrd>::compare.pointer_arithmetic.12] line 177 pointer arithmetic: invalid integer address in rhs.data + var_37: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/slice/index.rs function <std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::get_unchecked
+[<std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::get_unchecked.assertion.1] line 224 attempt to compute `move _8 - move _9`, which would overflow: SUCCESS
+[<std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::get_unchecked.overflow.1] line 224 arithmetic overflow on unsigned - in var_8 - var_9: SUCCESS
+
+/home/runner/work/rmc/rmc/library/core/src/slice/index.rs function <std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index
+[<std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index.assertion.1] line 238 a panicking function core::slice::index::slice_index_order_fail is invoked: SUCCESS
+[<std::ops::Range<usize> as std::slice::SliceIndex<[T]>>::index.assertion.2] line 240 a panicking function core::slice::index::slice_end_index_len_fail is invoked: SUCCESS
+
+/home/runner/work/rmc/rmc/src/test/dashboard/books/The Rust Reference/Statements and expressions/Expressions/Operator expressions/263.rs function main
+[main.assertion.1] line 7 assertion failed: [1, 2, 3] < [1, 3, 4]: SUCCESS
+[main.assertion.2] line 9 assertion failed: \"World\" >= \"Hello\": SUCCESS
+
+<builtin-architecture-strings> function __CPROVER_precondition
+[__CPROVER_precondition.assertion.1] line 20 assertion false: SUCCESS
+
+<builtin-library-__CPROVER_assert> function __CPROVER_assert
+[__CPROVER_assert.assertion.1] assertion false: SUCCESS
+
+<builtin-library-__CPROVER_assume> function __CPROVER_assume
+[__CPROVER_assume.assertion.1] assertion false: SUCCESS
+
+<builtin-library-__builtin_powi> function __builtin_powi
+[__builtin_powi.assertion.1] assertion false: SUCCESS
+
+<builtin-library-__builtin_powif> function __builtin_powif
+[__builtin_powif.assertion.1] assertion false: SUCCESS
+
+<builtin-library-calloc> function calloc
+[calloc.assertion.1] assertion false: SUCCESS
+
+<builtin-library-ceil> function ceil
+[ceil.assertion.1] assertion false: SUCCESS
+
+<builtin-library-ceilf> function ceilf
+[ceilf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-copysign> function copysign
+[copysign.assertion.1] assertion false: SUCCESS
+
+<builtin-library-copysignf> function copysignf
+[copysignf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-cos> function cos
+[cos.assertion.1] assertion false: SUCCESS
+
+<builtin-library-cosf> function cosf
+[cosf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-exp2> function exp2
+[exp2.assertion.1] assertion false: SUCCESS
+
+<builtin-library-exp2f> function exp2f
+[exp2f.assertion.1] assertion false: SUCCESS
+
+<builtin-library-exp> function exp
+[exp.assertion.1] assertion false: SUCCESS
+
+<builtin-library-expf> function expf
+[expf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-fabs> function fabs
+[fabs.assertion.1] assertion false: SUCCESS
+
+<builtin-library-fabsf> function fabsf
+[fabsf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-floor> function floor
+[floor.assertion.1] assertion false: SUCCESS
+
+<builtin-library-floorf> function floorf
+[floorf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-fma> function fma
+[fma.assertion.1] assertion false: SUCCESS
+
+<builtin-library-fmaf> function fmaf
+[fmaf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-fmax> function fmax
+[fmax.assertion.1] assertion false: SUCCESS
+
+<builtin-library-fmaxf> function fmaxf
+[fmaxf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-fmin> function fmin
+[fmin.assertion.1] assertion false: SUCCESS
+
+<builtin-library-fminf> function fminf
+[fminf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-free> function free
+[free.assertion.1] assertion false: SUCCESS
+
+<builtin-library-log10> function log10
+[log10.assertion.1] assertion false: SUCCESS
+
+<builtin-library-log10f> function log10f
+[log10f.assertion.1] assertion false: SUCCESS
+
+<builtin-library-log2> function log2
+[log2.assertion.1] assertion false: SUCCESS
+
+<builtin-library-log2f> function log2f
+[log2f.assertion.1] assertion false: SUCCESS
+
+<builtin-library-log> function log
+[log.assertion.1] assertion false: SUCCESS
+
+<builtin-library-logf> function logf
+[logf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-malloc> function malloc
+[malloc.assertion.1] assertion false: SUCCESS
+
+<builtin-library-memcmp> function memcmp
+[memcmp.overflow.1] line 19 arithmetic overflow on signed to unsigned type conversion in (size_t)POINTER_OFFSET(s1): SUCCESS
+[memcmp.overflow.2] line 19 arithmetic overflow on unsigned + in (size_t)POINTER_OFFSET(s1) + n: SUCCESS
+[memcmp.pointer_primitives.1] line 19 pointer invalid in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.2] line 19 deallocated dynamic object in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.3] line 19 dead object in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.4] line 19 pointer outside object bounds in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.5] line 19 pointer invalid in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.6] line 19 deallocated dynamic object in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.7] line 19 dead object in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.8] line 19 pointer outside object bounds in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.9] line 19 pointer invalid in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.10] line 19 deallocated dynamic object in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.11] line 19 dead object in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.12] line 19 pointer outside object bounds in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.13] line 19 pointer invalid in POINTER_OFFSET(s1): SUCCESS
+[memcmp.pointer_primitives.14] line 19 deallocated dynamic object in POINTER_OFFSET(s1): SUCCESS
+[memcmp.pointer_primitives.15] line 19 dead object in POINTER_OFFSET(s1): SUCCESS
+[memcmp.pointer_primitives.16] line 19 pointer outside object bounds in POINTER_OFFSET(s1): SUCCESS
+[memcmp.pointer_primitives.17] line 19 pointer invalid in POINTER_OFFSET(s1): SUCCESS
+[memcmp.pointer_primitives.18] line 19 deallocated dynamic object in POINTER_OFFSET(s1): SUCCESS
+[memcmp.pointer_primitives.19] line 19 dead object in POINTER_OFFSET(s1): SUCCESS
+[memcmp.pointer_primitives.20] line 19 pointer outside object bounds in POINTER_OFFSET(s1): SUCCESS
+[memcmp.pointer_primitives.21] line 19 pointer invalid in OBJECT_SIZE(s1): SUCCESS
+[memcmp.pointer_primitives.22] line 19 deallocated dynamic object in OBJECT_SIZE(s1): SUCCESS
+[memcmp.pointer_primitives.23] line 19 dead object in OBJECT_SIZE(s1): SUCCESS
+[memcmp.pointer_primitives.24] line 19 pointer outside object bounds in OBJECT_SIZE(s1): SUCCESS
+[memcmp.pointer_primitives.25] line 19 pointer invalid in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.26] line 19 deallocated dynamic object in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.27] line 19 dead object in POINTER_OBJECT(s1): SUCCESS
+[memcmp.pointer_primitives.28] line 19 pointer outside object bounds in POINTER_OBJECT(s1): SUCCESS
+[memcmp.precondition.1] line 19 memcmp region 1 readable: SUCCESS
+[memcmp.overflow.3] line 21 arithmetic overflow on signed to unsigned type conversion in (size_t)POINTER_OFFSET(s2): SUCCESS
+[memcmp.overflow.4] line 21 arithmetic overflow on unsigned + in (size_t)POINTER_OFFSET(s2) + n: SUCCESS
+[memcmp.pointer_primitives.29] line 21 pointer invalid in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.30] line 21 deallocated dynamic object in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.31] line 21 dead object in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.32] line 21 pointer outside object bounds in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.33] line 21 pointer invalid in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.34] line 21 deallocated dynamic object in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.35] line 21 dead object in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.36] line 21 pointer outside object bounds in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.37] line 21 pointer invalid in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.38] line 21 deallocated dynamic object in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.39] line 21 dead object in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.40] line 21 pointer outside object bounds in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.41] line 21 pointer invalid in POINTER_OFFSET(s2): SUCCESS
+[memcmp.pointer_primitives.42] line 21 deallocated dynamic object in POINTER_OFFSET(s2): SUCCESS
+[memcmp.pointer_primitives.43] line 21 dead object in POINTER_OFFSET(s2): SUCCESS
+[memcmp.pointer_primitives.44] line 21 pointer outside object bounds in POINTER_OFFSET(s2): SUCCESS
+[memcmp.pointer_primitives.45] line 21 pointer invalid in POINTER_OFFSET(s2): SUCCESS
+[memcmp.pointer_primitives.46] line 21 deallocated dynamic object in POINTER_OFFSET(s2): SUCCESS
+[memcmp.pointer_primitives.47] line 21 dead object in POINTER_OFFSET(s2): SUCCESS
+[memcmp.pointer_primitives.48] line 21 pointer outside object bounds in POINTER_OFFSET(s2): SUCCESS
+[memcmp.pointer_primitives.49] line 21 pointer invalid in OBJECT_SIZE(s2): SUCCESS
+[memcmp.pointer_primitives.50] line 21 deallocated dynamic object in OBJECT_SIZE(s2): SUCCESS
+[memcmp.pointer_primitives.51] line 21 dead object in OBJECT_SIZE(s2): SUCCESS
+[memcmp.pointer_primitives.52] line 21 pointer outside object bounds in OBJECT_SIZE(s2): SUCCESS
+[memcmp.pointer_primitives.53] line 21 pointer invalid in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.54] line 21 deallocated dynamic object in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.55] line 21 dead object in POINTER_OBJECT(s2): SUCCESS
+[memcmp.pointer_primitives.56] line 21 pointer outside object bounds in POINTER_OBJECT(s2): SUCCESS
+[memcmp.precondition.2] line 21 memcpy region 2 readable: SUCCESS
+[memcmp.overflow.6] line 25 arithmetic overflow on unsigned - in n - 1ul: SUCCESS
+[memcmp.overflow.5] line 27 arithmetic overflow on signed - in (signed int)*tmp_post - (signed int)*tmp_post$0: SUCCESS
+[memcmp.pointer_arithmetic.1] line 27 pointer arithmetic: pointer NULL in sc1 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.2] line 27 pointer arithmetic: pointer invalid in sc1 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.3] line 27 pointer arithmetic: deallocated dynamic object in sc1 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.4] line 27 pointer arithmetic: dead object in sc1 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.5] line 27 pointer arithmetic: pointer outside object bounds in sc1 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.6] line 27 pointer arithmetic: invalid integer address in sc1 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.7] line 27 pointer arithmetic: pointer NULL in sc2 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.8] line 27 pointer arithmetic: pointer invalid in sc2 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.9] line 27 pointer arithmetic: deallocated dynamic object in sc2 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.10] line 27 pointer arithmetic: dead object in sc2 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.11] line 27 pointer arithmetic: pointer outside object bounds in sc2 + 1l: SUCCESS
+[memcmp.pointer_arithmetic.12] line 27 pointer arithmetic: invalid integer address in sc2 + 1l: SUCCESS
+[memcmp.pointer_dereference.1] line 27 dereference failure: pointer NULL in *tmp_post: SUCCESS
+[memcmp.pointer_dereference.2] line 27 dereference failure: pointer invalid in *tmp_post: SUCCESS
+[memcmp.pointer_dereference.3] line 27 dereference failure: deallocated dynamic object in *tmp_post: SUCCESS
+[memcmp.pointer_dereference.4] line 27 dereference failure: dead object in *tmp_post: SUCCESS
+[memcmp.pointer_dereference.5] line 27 dereference failure: pointer outside object bounds in *tmp_post: SUCCESS
+[memcmp.pointer_dereference.6] line 27 dereference failure: invalid integer address in *tmp_post: SUCCESS
+[memcmp.pointer_dereference.7] line 27 dereference failure: pointer NULL in *tmp_post$0: SUCCESS
+[memcmp.pointer_dereference.8] line 27 dereference failure: pointer invalid in *tmp_post$0: SUCCESS
+[memcmp.pointer_dereference.9] line 27 dereference failure: deallocated dynamic object in *tmp_post$0: SUCCESS
+[memcmp.pointer_dereference.10] line 27 dereference failure: dead object in *tmp_post$0: SUCCESS
+[memcmp.pointer_dereference.11] line 27 dereference failure: pointer outside object bounds in *tmp_post$0: SUCCESS
+[memcmp.pointer_dereference.12] line 27 dereference failure: invalid integer address in *tmp_post$0: SUCCESS
+
+<builtin-library-memcpy> function memcpy
+[memcpy.assertion.1] assertion false: SUCCESS
+
+<builtin-library-memmove> function memmove
+[memmove.assertion.1] assertion false: SUCCESS
+
+<builtin-library-memset> function memset
+[memset.assertion.1] assertion false: SUCCESS
+
+<builtin-library-nearbyint> function nearbyint
+[nearbyint.assertion.1] assertion false: SUCCESS
+
+<builtin-library-nearbyintf> function nearbyintf
+[nearbyintf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-pow> function pow
+[pow.assertion.1] assertion false: SUCCESS
+
+<builtin-library-powf> function powf
+[powf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-realloc> function realloc
+[realloc.assertion.1] assertion false: SUCCESS
+
+<builtin-library-rint> function rint
+[rint.assertion.1] assertion false: SUCCESS
+
+<builtin-library-rintf> function rintf
+[rintf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-round> function round
+[round.assertion.1] assertion false: SUCCESS
+
+<builtin-library-roundf> function roundf
+[roundf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-sin> function sin
+[sin.assertion.1] assertion false: SUCCESS
+
+<builtin-library-sinf> function sinf
+[sinf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-sqrt> function sqrt
+[sqrt.assertion.1] assertion false: SUCCESS
+
+<builtin-library-sqrtf> function sqrtf
+[sqrtf.assertion.1] assertion false: SUCCESS
+
+<builtin-library-trunc> function trunc
+[trunc.assertion.1] assertion false: SUCCESS
+
+<builtin-library-truncf> function truncf
+[truncf.assertion.1] assertion false: SUCCESS
+
+** 2 of 292 failed (2 iterations)
+VERIFICATION FAILED
+
+            </xmp>
+          </div><!-- class="output-box" -->
+          
+
+          
+
+        </div><!-- class="command-content" -->
+      </div><!-- class="fail" -->
+    </div><!-- id="command-table" -->
+    
+
+  </div><!-- class="stage" -->
+  
+
+
+</div><!-- id="content" -->
+</body>
+</html>
