@@ -8,7 +8,7 @@ set -eu
 DEPS=(
   bison
   cmake
-  ctags
+  universal-ctags
   curl
   flex
   g++
