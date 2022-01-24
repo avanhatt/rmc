@@ -1,5 +1,9 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
+// kani-verify-fail
+// kani-flags: --no-restrict-vtable
+// ^ Note: vtable restrictions currently do not support all autotrait casts, 
+// so disabled above.
 
 use std::any::Any;
 
